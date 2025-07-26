@@ -31,6 +31,7 @@ import {
   SidebarInset,
   SidebarTrigger,
   useSidebar,
+  SidebarSeparator,
 } from "@/components/ui/sidebar";
 import {
   Landmark,
@@ -223,8 +224,9 @@ function AppSidebar() {
           ))}
         </SidebarMenu>
       </SidebarContent>
-       <SidebarContent className="flex-grow-0">
+       <SidebarContent className="mt-auto flex-grow-0">
         <SidebarMenu>
+          <SidebarSeparator />
           {secondaryNavItems.map((item) => (
             <SidebarMenuItem key={item.href}>
               <SidebarMenuButton
