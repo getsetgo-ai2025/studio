@@ -10,6 +10,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { findNearbyStoresTool } from '../tools/find-nearby-stores';
 
 const CropHealthAdviceInputSchema = z.object({
   photoDataUri: z
@@ -18,12 +19,16 @@ const CropHealthAdviceInputSchema = z.object({
       "A photo of diseased crops, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
     ),
   description: z.string().describe('A description of the symptoms or conditions of the crops.'),
+  location: z.string().describe('The current location of the user to find nearby stores.'),
 });
 export type CropHealthAdviceInput = z.infer<typeof CropHealthAdviceInputSchema>;
 
 const CropHealthAdviceOutputSchema = z.object({
-  diagnosis: z.string().describe('The diagnosis of the crop issue.'),
-  treatmentPlan: z.string().describe('A treatment plan for the diagnosed issue.'),
+    isHealthy: z.boolean().describe("Whether the crop is healthy or not."),
+    analysis: z.string().describe('The detailed analysis of the crop issue.'),
+    treatmentPlan: z.string().optional().describe('A treatment plan for the diagnosed issue. This should only be present if the crop is not healthy.'),
+    requiredProducts: z.array(z.string()).optional().describe('A list of products or medicines required for the treatment. This should only be present if the crop is not healthy.'),
+    nearbyOutlets: z.array(z.string()).optional().describe('A list of nearby outlets where the farmer can get the needed medicines. This should only be present if a treatment is needed.'),
 });
 export type CropHealthAdviceOutput = z.infer<typeof CropHealthAdviceOutputSchema>;
 
@@ -35,11 +40,18 @@ const cropHealthAdvicePrompt = ai.definePrompt({
   name: 'cropHealthAdvicePrompt',
   input: {schema: CropHealthAdviceInputSchema},
   output: {schema: CropHealthAdviceOutputSchema},
-  prompt: `You are an expert agricultural advisor. A farmer has provided you with a photo and description of their diseased crops.
+  tools: [findNearbyStoresTool],
+  prompt: `You are an expert agricultural advisor. A farmer has provided you with a photo and description of their crops, along with their location.
 
-  Based on this information, provide a diagnosis and a treatment plan.
+  1.  First, analyze the provided photo and description to determine if the crop is healthy.
+  2.  Provide a detailed analysis of your findings.
+  3.  If the crop is unhealthy:
+      a.  Formulate a detailed treatment plan.
+      b.  List the specific products or medicines required for the treatment.
+      c.  Use the findNearbyStoresTool to find outlets near the user's location that sell the required products. Your response for nearbyOutlets should be based *only* on the output of this tool.
 
   Description: {{{description}}}
+  Location: {{{location}}}
   Photo: {{media url=photoDataUri}}
   `,
 });

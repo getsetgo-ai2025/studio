@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState, useActionState } from "react";
-import { useFormStatus } from "react-dom";
+import { useEffect, useRef, useState } from "react";
+import { useFormStatus, useActionState } from "react-dom";
 import { getAdvice } from "./actions";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -18,10 +18,11 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Camera, AlertCircle, Loader2, Mic, Volume2, MicOff } from "lucide-react";
+import { Camera, AlertCircle, Loader2, Mic, Volume2, MicOff, CheckCircle2, HeartPulse, List, Store } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/hooks/use-language";
 import { useSpeechRecognition } from "@/hooks/use-speech-recognition";
+import { Badge } from "@/components/ui/badge";
 
 function SubmitButton() {
   const { pending: isPending } = useFormStatus();
@@ -92,7 +93,17 @@ function ResultCard({
 
   if (!data) return null;
 
-  const fullText = `${language === 'kn' ? 'ರೋಗನಿರ್ಣಯ:' : 'Diagnosis:'} ${data.diagnosis}. ${language === 'kn' ? 'ಚಿಕಿತ್ಸಾ ಯೋಜನೆ:' : 'Treatment Plan:'} ${data.treatmentPlan}`;
+  let fullText = `${language === 'kn' ? 'ವಿಶ್ಲೇಷಣೆ:' : 'Analysis:'} ${data.analysis}.`;
+  if (data.treatmentPlan) {
+    fullText += ` ${language === 'kn' ? 'ಚಿಕಿತ್ಸಾ ಯೋಜನೆ:' : 'Treatment Plan:'} ${data.treatmentPlan}.`;
+  }
+  if (data.requiredProducts?.length) {
+    fullText += ` ${language === 'kn' ? 'ಅಗತ್ಯವಿರುವ ಉತ್ಪನ್ನಗಳು:' : 'Required Products:'} ${data.requiredProducts.join(', ')}.`;
+  }
+  if (data.nearbyOutlets?.length) {
+    fullText += ` ${language === 'kn' ? 'ಹತ್ತಿರದ ಮಳಿಗೆಗಳು:' : 'Nearby Outlets:'} ${data.nearbyOutlets.join(', ')}.`;
+  }
+
 
   return (
     <Card>
@@ -111,14 +122,48 @@ function ResultCard({
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div>
-          <h3 className="font-semibold text-lg text-primary">{language === 'kn' ? 'ರೋಗನಿರ್ಣಯ' : 'Diagnosis'}</h3>
-          <p className="text-muted-foreground">{data.diagnosis}</p>
+        <div className="flex items-center gap-2">
+            <h3 className="font-semibold text-lg text-primary">{language === 'kn' ? 'ಬೆಳೆ ಸ್ಥಿತಿ' : 'Crop Status'}</h3>
+            <Badge variant={data.isHealthy ? 'default' : 'destructive'}>
+                {data.isHealthy ? 
+                    <><CheckCircle2 className="mr-1 h-4 w-4" /> {language === 'kn' ? 'ಆರೋಗ್ಯಕರ' : 'Healthy'}</> : 
+                    <><HeartPulse className="mr-1 h-4 w-4" /> {language === 'kn' ? 'ಆರೋಗ್ಯಕರವಲ್ಲ' : 'Unhealthy'}</>
+                }
+            </Badge>
         </div>
+
         <div>
-          <h3 className="font-semibold text-lg text-primary">{language === 'kn' ? 'ಚಿಕಿತ್ಸಾ ಯೋಜನೆ' : 'Treatment Plan'}</h3>
-          <p className="text-muted-foreground whitespace-pre-wrap">{data.treatmentPlan}</p>
+          <h3 className="font-semibold text-lg text-primary">{language === 'kn' ? 'ವಿಶ್ಲೇಷಣೆ' : 'Analysis'}</h3>
+          <p className="text-muted-foreground">{data.analysis}</p>
         </div>
+
+        {!data.isHealthy && (
+            <>
+                {data.treatmentPlan && (
+                    <div>
+                        <h3 className="font-semibold text-lg text-primary">{language === 'kn' ? 'ಚಿಕಿತ್ಸಾ ಯೋಜನೆ' : 'Treatment Plan'}</h3>
+                        <p className="text-muted-foreground whitespace-pre-wrap">{data.treatmentPlan}</p>
+                    </div>
+                )}
+                {data.requiredProducts?.length > 0 && (
+                     <div>
+                        <h3 className="font-semibold text-lg text-primary flex items-center gap-2"><List /> {language === 'kn' ? 'ಅಗತ್ಯವಿರುವ ಉತ್ಪನ್ನಗಳು' : 'Required Products'}</h3>
+                        <ul className="list-disc list-inside text-muted-foreground">
+                            {data.requiredProducts.map((product: string, index: number) => <li key={index}>{product}</li>)}
+                        </ul>
+                    </div>
+                )}
+                 {data.nearbyOutlets?.length > 0 && (
+                     <div>
+                        <h3 className="font-semibold text-lg text-primary flex items-center gap-2"><Store /> {language === 'kn' ? 'ಹತ್ತಿರದ ಮಳಿಗೆಗಳು' : 'Nearby Outlets'}</h3>
+                        <ul className="list-disc list-inside text-muted-foreground">
+                            {data.nearbyOutlets.map((outlet: string, index: number) => <li key={index}>{outlet}</li>)}
+                        </ul>
+                    </div>
+                )}
+            </>
+        )}
+
       </CardContent>
     </Card>
   );
@@ -200,7 +245,34 @@ export default function DoctorAgroPage() {
             formAction(formData);
         }}>
           <CardContent className="space-y-4">
-            <div className="space-y-2">
+            <div className="grid md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="location">{language === 'kn' ? 'ಸ್ಥಳ' : 'Location'}</Label>
+                  <Input
+                    id="location"
+                    name="location"
+                    placeholder={language === 'kn' ? "ಉದಾಹರಣೆಗೆ, 'ಬೆಂಗಳೂರು'" : "e.g., 'Bangalore'"}
+                    required
+                  />
+                  {state.formErrors?.location && (
+                    <p className="text-sm text-destructive">{state.formErrors.location[0]}</p>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="image">{language === 'kn' ? 'ಫೋಟೋ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ' : 'Upload Photo'}</Label>
+                  <div className="relative">
+                    <Input id="image" name="image" type="file" accept="image/*" required onChange={handleImageChange} className="pr-10"/>
+                    <Button type="button" variant="ghost" size="icon" className="absolute bottom-1 right-1 h-8 w-8" onClick={() => document.getElementById('image')?.click()}>
+                      <Camera className="h-4 w-4" />
+                      <span className="sr-only">Use camera</span>
+                    </Button>
+                  </div>
+                  {state.formErrors?.image && (
+                    <p className="text-sm text-destructive">{state.formErrors.image[0]}</p>
+                  )}
+                </div>
+            </div>
+             <div className="space-y-2">
               <Label htmlFor="description">{language === 'kn' ? 'ರೋಗಲಕ್ಷಣಗಳ ವಿವರಣೆ' : 'Symptom Description'}</Label>
               <div className="relative">
                 <Textarea
@@ -222,29 +294,17 @@ export default function DoctorAgroPage() {
                 <p className="text-sm text-destructive">{state.formErrors.description[0]}</p>
               )}
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="image">{language === 'kn' ? 'ಫೋಟೋ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ' : 'Upload Photo'}</Label>
-               {imagePreview && (
-                <div className="mt-4 relative aspect-video w-full max-w-sm mx-auto">
-                    <Image
-                        src={imagePreview}
-                        alt="Uploaded crop"
-                        fill
-                        className="rounded-md object-cover"
-                    />
-                </div>
-                )}
-              <div className="relative">
-                <Input id="image" name="image" type="file" accept="image/*" required onChange={handleImageChange} />
-                <Button type="button" variant="ghost" size="icon" className="absolute bottom-1 right-1 h-8 w-8" onClick={() => document.getElementById('image')?.click()}>
-                  <Camera className="h-4 w-4" />
-                  <span className="sr-only">Use camera</span>
-                </Button>
-              </div>
-              {state.formErrors?.image && (
-                <p className="text-sm text-destructive">{state.formErrors.image[0]}</p>
-              )}
+
+            {imagePreview && (
+            <div className="mt-4 relative aspect-video w-full max-w-sm mx-auto">
+                <Image
+                    src={imagePreview}
+                    alt="Uploaded crop"
+                    fill
+                    className="rounded-md object-cover"
+                />
             </div>
+            )}
           </CardContent>
           <CardFooter>
             <SubmitButton />

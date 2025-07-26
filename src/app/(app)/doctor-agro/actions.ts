@@ -6,6 +6,7 @@ import { translateText } from "@/ai/flows/translator";
 
 const formSchema = z.object({
   description: z.string().min(10, "Please provide a more detailed description."),
+  location: z.string().min(2, "Please provide a valid location."),
   image: z
     .any()
     .refine((file) => file?.size > 0, "An image of the crop is required.")
@@ -19,6 +20,7 @@ type State = {
   formErrors?: {
     description?: string[];
     image?: string[];
+    location?: string[];
   };
 };
 
@@ -28,6 +30,7 @@ export async function getAdvice(
 ): Promise<State> {
   const validatedFields = formSchema.safeParse({
     description: formData.get("description"),
+    location: formData.get("location"),
     image: formData.get("image"),
     language: formData.get("language"),
   });
@@ -40,7 +43,7 @@ export async function getAdvice(
     };
   }
 
-  const { description, image: file, language } = validatedFields.data;
+  const { description, image: file, language, location } = validatedFields.data;
 
   try {
     const bytes = await file.arrayBuffer();
@@ -49,18 +52,30 @@ export async function getAdvice(
 
     const result = await getCropHealthAdvice({
       description,
+      location,
       photoDataUri,
     });
 
     if (language === 'kn') {
-        const [translatedDiagnosis, translatedTreatmentPlan] = await Promise.all([
-            translateText({ text: result.diagnosis, targetLanguage: 'kn' }),
-            translateText({ text: result.treatmentPlan, targetLanguage: 'kn' })
+        const [
+            translatedAnalysis, 
+            translatedTreatmentPlan,
+            translatedRequiredProducts,
+            translatedNearbyOutlets,
+        ] = await Promise.all([
+            translateText({ text: result.analysis, targetLanguage: 'kn' }),
+            result.treatmentPlan ? translateText({ text: result.treatmentPlan, targetLanguage: 'kn' }) : Promise.resolve(null),
+            result.requiredProducts ? Promise.all(result.requiredProducts.map(p => translateText({ text: p, targetLanguage: 'kn' }))) : Promise.resolve(null),
+            result.nearbyOutlets ? Promise.all(result.nearbyOutlets.map(o => translateText({ text: o, targetLanguage: 'kn' }))) : Promise.resolve(null),
         ]);
+        
         return { 
-            data: { 
-                diagnosis: translatedDiagnosis.translatedText, 
-                treatmentPlan: translatedTreatmentPlan.translatedText 
+            data: {
+                isHealthy: result.isHealthy,
+                analysis: translatedAnalysis.translatedText,
+                treatmentPlan: translatedTreatmentPlan?.translatedText,
+                requiredProducts: translatedRequiredProducts?.map(p => p.translatedText),
+                nearbyOutlets: translatedNearbyOutlets?.map(o => o.translatedText),
             }, 
             error: null 
         };
