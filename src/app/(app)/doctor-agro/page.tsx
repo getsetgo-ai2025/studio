@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useFormStatus, useActionState } from "react-dom";
+import { useEffect, useRef, useState, useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { getAdvice } from "./actions";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
