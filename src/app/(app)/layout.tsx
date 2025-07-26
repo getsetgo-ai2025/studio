@@ -34,6 +34,7 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import {
+  Home,
   Landmark,
   LineChart,
   LogOut,
@@ -53,6 +54,12 @@ import { useAuth } from "@/hooks/use-auth";
 
 
 const navItems = [
+  {
+    href: "/home",
+    icon: Home,
+    label: { en: "Home", kn: "ಮುಖಪುಟ" },
+    tooltip: { en: "Home", kn: "ಮುಖಪುಟ" },
+  },
   {
     href: "/doctor-agro",
     icon: Stethoscope,

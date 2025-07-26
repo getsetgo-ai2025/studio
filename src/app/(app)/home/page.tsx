@@ -1,0 +1,116 @@
+
+"use client";
+
+import Image from "next/image";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Newspaper, Home as HomeIcon } from "lucide-react";
+import { useLanguage } from "@/hooks/use-language";
+
+const slideshowImages = [
+    { src: "https://placehold.co/800x400.png", alt: { en: "Lush green field", kn: "ಹಚ್ಚ ಹಸಿರಿನ ಹೊಲ" }, hint: "green field" },
+    { src: "https://placehold.co/800x400.png", alt: { en: "Farmer smiling", kn: "ನಗುತ್ತಿರುವ ರೈತ" }, hint: "farmer smiling" },
+    { src: "https://placehold.co/800x400.png", alt: { en: "Modern farming equipment", kn: "ಆಧುನಿಕ ಕೃಷಿ ಉಪಕರಣಗಳು" }, hint: "modern farming" },
+    { src: "https://placehold.co/800x400.png", alt: { en: "Healthy crop harvest", kn: "ಆರೋಗ್ಯಕರ ಬೆಳೆ ಸುಗ್ಗಿಯ" }, hint: "crop harvest" },
+];
+
+const newsItems = [
+    {
+        title: { en: "New Irrigation Scheme Announced for Karnataka Farmers", kn: "ಕರ್ನಾಟಕ ರೈತರಿಗೆ ಹೊಸ ನೀರಾವರಿ ಯೋಜನೆ ಪ್ರಕಟ" },
+        date: { en: "October 26, 2023", kn: "ಅಕ್ಟೋಬರ್ ೨೬, ೨೦೨೩" },
+        summary: { 
+            en: "The state government has launched a new scheme to provide subsidies on drip irrigation systems to conserve water.",
+            kn: "ನೀರನ್ನು ಸಂರಕ್ಷಿಸಲು ಹನಿ ನೀರಾವರಿ ವ್ಯವಸ್ಥೆಗಳ ಮೇಲೆ ಸಬ್ಸಿಡಿ ನೀಡಲು ರಾಜ್ಯ ಸರ್ಕಾರ ಹೊಸ ಯೋಜನೆಯನ್ನು ಪ್ರಾರಂಭಿಸಿದೆ."
+        },
+    },
+    {
+        title: { en: "Ragi MSP Increased Ahead of Harvest Season", kn: "ಕೊಯ್ಲು ಋತುವಿನ ಮುಂಚಿತವಾಗಿ ರಾಗಿ MSP ಹೆಚ್ಚಳ" },
+        date: { en: "October 24, 2023", kn: "ಅಕ್ಟೋಬರ್ ೨೪, ೨೦೨೩" },
+        summary: {
+            en: "The central government has increased the Minimum Support Price for Ragi, benefiting thousands of farmers in the state.",
+            kn: "ಕೇಂದ್ರ ಸರ್ಕಾರ ರಾಗಿಗೆ ಕನಿಷ್ಠ ಬೆಂಬಲ ಬೆಲೆಯನ್ನು ಹೆಚ್ಚಿಸಿದ್ದು, ರಾಜ್ಯದ ಸಾವಿರಾರು ರೈತರಿಗೆ ಅನುಕೂಲವಾಗಿದೆ."
+        },
+    },
+     {
+        title: { en: "Workshop on Organic Farming to be Held in Mysuru", kn: "ಮೈಸೂರಿನಲ್ಲಿ ಸಾವಯವ ಕೃಷಿ ಕುರಿತು ಕಾರ್ಯಾಗಾರ" },
+        date: { en: "October 22, 2023", kn: "ಅಕ್ಟೋಬರ್ ೨೨, ೨೦೨೩" },
+        summary: {
+            en: "An upcoming workshop aims to educate farmers on the benefits and techniques of organic farming practices.",
+            kn: "ಮುಂಬರುವ ಕಾರ್ಯಾಗಾರವು ರೈತರಿಗೆ ಸಾವಯವ ಕೃಷಿ ಪದ್ಧತಿಗಳ ಪ್ರಯೋಜನಗಳು ಮತ್ತು ತಂತ್ರಗಳ ಬಗ್ಗೆ ಶಿಕ್ಷಣ ನೀಡುವ ಗುರಿಯನ್ನು ಹೊಂದಿದೆ."
+        },
+    },
+];
+
+
+export default function HomePage() {
+    const { language } = useLanguage();
+
+    return (
+        <div className="space-y-6">
+             <Card>
+                <CardHeader>
+                    <CardTitle className="font-headline flex items-center gap-2">
+                        <HomeIcon /> {language === 'kn' ? 'ರೈತ ಸಹಾಯಕಕ್ಕೆ ಸ್ವಾಗತ' : 'Welcome to Raita Sahayak'}
+                    </CardTitle>
+                    <CardDescription>
+                        {language === 'kn' ? 'ಕೃತಕ ಬುದ್ಧಿಮತ್ತೆಯೊಂದಿಗೆ ಭಾರತೀಯ ರೈತರನ್ನು ಸಬಲೀಕರಣಗೊಳಿಸುವುದು' : 'Empowering Indian Farmers with Artificial Intelligence'}
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                    <div>
+                        <p className="text-muted-foreground">
+                            {language === 'kn' ? 
+                                'ರೈತ ಸಹಾಯಕವು ಭಾರತದ ರೈತರಿಗೆ, ವಿಶೇಷವಾಗಿ ಕರ್ನಾಟಕದ ನಮ್ಮ ಸಹೋದರ ಸಹೋದರಿಯರಿಗೆ ಸಹಾಯ ಮಾಡಲು ವಿನ್ಯಾಸಗೊಳಿಸಲಾದ ಒಂದು ಕ್ರಾಂತಿಕಾರಿ ಅಪ್ಲಿಕೇಶನ್ ಆಗಿದೆ. ನಮ್ಮ ಗುರಿ ಆಧುನಿಕ ತಂತ್ರಜ್ಞಾನವನ್ನು ನಿಮ್ಮ ಬೆರಳ ತುದಿಗೆ ತರುವುದು, ತಜ್ಞರ ಸಲಹೆ, ಮಾರುಕಟ್ಟೆ ಒಳನೋಟಗಳು ಮತ್ತು ಸರ್ಕಾರಿ ಯೋಜನೆಗಳ ಮಾಹಿತಿಯನ್ನು ತಕ್ಷಣ ಒದಗಿಸುವುದು.' :
+                                'Raita Sahayak is a revolutionary app designed to assist the hardworking farmers of India, with a special focus on our brothers and sisters in Karnataka. Our mission is to bring modern technology to your fingertips, providing expert advice, market insights, and information on government schemes instantly.'
+                            }
+                        </p>
+                    </div>
+
+                    <Carousel className="w-full" opts={{ loop: true }}>
+                        <CarouselContent>
+                            {slideshowImages.map((image, index) => (
+                                <CarouselItem key={index}>
+                                    <div className="relative aspect-video w-full">
+                                        <Image 
+                                            src={image.src} 
+                                            alt={image.alt[language]} 
+                                            data-ai-hint={image.hint}
+                                            fill
+                                            className="rounded-lg object-cover"
+                                        />
+                                    </div>
+                                </CarouselItem>
+                            ))}
+                        </CarouselContent>
+                        <CarouselPrevious className="left-4" />
+                        <CarouselNext className="right-4" />
+                    </Carousel>
+                </CardContent>
+            </Card>
+
+            <Card>
+                <CardHeader>
+                    <CardTitle className="font-headline flex items-center gap-2">
+                        <Newspaper /> {language === 'kn' ? 'ಇತ್ತೀಚಿನ ಸುದ್ದಿಗಳು' : 'Recent News'}
+                    </CardTitle>
+                    <CardDescription>
+                        {language === 'kn' ? 'ಕರ್ನಾಟಕದ ರೈತರಿಗೆ ಸಂಬಂಧಿಸಿದ ನವೀಕರಣಗಳು' : 'Updates relevant to farmers in Karnataka'}
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    {newsItems.map((item, index) => (
+                        <Card key={index}>
+                            <CardHeader>
+                                <CardTitle className="text-lg">{item.title[language]}</CardTitle>
+                                <CardDescription>{item.date[language]}</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-sm text-muted-foreground">{item.summary[language]}</p>
+                            </CardContent>
+                        </Card>
+                    ))}
+                </CardContent>
+            </Card>
+        </div>
+    );
+}
