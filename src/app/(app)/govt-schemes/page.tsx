@@ -12,6 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -50,16 +51,14 @@ function ResultCard({
   error: string | null;
   pending: boolean;
 }) {
-
   const handleSpeak = (text: string) => {
-    if ('speechSynthesis' in window) {
+    if ("speechSynthesis" in window) {
       const utterance = new SpeechSynthesisUtterance(text);
       window.speechSynthesis.speak(utterance);
     } else {
-      alert('Text-to-speech is not supported in your browser.');
+      alert("Text-to-speech is not supported in your browser.");
     }
   };
-
 
   if (isPending) {
     return (
@@ -87,22 +86,28 @@ function ResultCard({
 
   if (!data || data.schemes.length === 0) return null;
 
-  const fullText = data.schemes.map((scheme:any) => 
-    `Scheme: ${scheme.name}. Description: ${scheme.description}. Eligibility: ${scheme.eligibilityCriteria}. Benefits: ${scheme.benefits}. How to apply: ${scheme.howToApply}.`
-  ).join(' ');
-
+  const fullText = data.schemes
+    .map(
+      (scheme: any) =>
+        `Scheme: ${scheme.name}. Description: ${scheme.description}. Eligibility: ${scheme.eligibilityCriteria}. Benefits: ${scheme.benefits}. How to apply: ${scheme.howToApply}.`
+    )
+    .join(" ");
 
   return (
     <Card>
       <CardHeader>
-         <div className="flex justify-between items-start">
+        <div className="flex justify-between items-start">
           <div>
             <CardTitle>Relevant Government Schemes</CardTitle>
             <CardDescription>
               Based on your situation, you may be eligible for these schemes.
             </CardDescription>
           </div>
-          <Button variant="ghost" size="icon" onClick={() => handleSpeak(fullText)}>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => handleSpeak(fullText)}
+          >
             <Volume2 className="h-5 w-5" />
             <span className="sr-only">Read all schemes aloud</span>
           </Button>
@@ -118,16 +123,28 @@ function ResultCard({
               <AccordionContent className="space-y-4">
                 <p className="text-muted-foreground">{scheme.description}</p>
                 <div className="space-y-2">
-                    <h4 className="font-semibold text-accent-foreground">Eligibility Criteria</h4>
-                    <p className="text-sm text-muted-foreground">{scheme.eligibilityCriteria}</p>
+                  <h4 className="font-semibold text-accent-foreground">
+                    Eligibility Criteria
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    {scheme.eligibilityCriteria}
+                  </p>
                 </div>
                 <div className="space-y-2">
-                    <h4 className="font-semibold text-accent-foreground">Benefits</h4>
-                    <p className="text-sm text-muted-foreground">{scheme.benefits}</p>
+                  <h4 className="font-semibold text-accent-foreground">
+                    Benefits
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    {scheme.benefits}
+                  </p>
                 </div>
                 <div className="space-y-2">
-                    <h4 className="font-semibold text-accent-foreground">How to Apply</h4>
-                    <p className="text-sm text-muted-foreground">{scheme.howToApply}</p>
+                  <h4 className="font-semibold text-accent-foreground">
+                    How to Apply
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    {scheme.howToApply}
+                  </p>
                 </div>
               </AccordionContent>
             </AccordionItem>
@@ -155,8 +172,8 @@ export default function GovtSchemesPage() {
         description: state.error,
       });
     }
-     if (state.data) {
-        formRef.current?.reset();
+    if (state.data) {
+      formRef.current?.reset();
     }
   }, [state, toast]);
 
@@ -164,31 +181,84 @@ export default function GovtSchemesPage() {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="font-headline">Government Scheme Finder</CardTitle>
+          <CardTitle className="font-headline">
+            Government Scheme Finder
+          </CardTitle>
           <CardDescription>
-            Describe your situation and the crops you grow to find relevant government schemes.
+            Enter your details to find relevant government schemes.
           </CardDescription>
         </CardHeader>
         <form ref={formRef} action={formAction}>
-          <CardContent>
+          <CardContent className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="situation">Your Situation</Label>
-               <div className="relative">
+              <Label htmlFor="location">Location</Label>
+              <Input
+                id="location"
+                name="location"
+                placeholder="e.g., 'Karnataka'"
+                required
+              />
+              {state.formErrors?.location && (
+                <p className="text-sm text-destructive">
+                  {state.formErrors.location[0]}
+                </p>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="landParcel">Land Parcel (in acres)</Label>
+              <Input
+                id="landParcel"
+                name="landParcel"
+                type="number"
+                placeholder="e.g., '2'"
+                required
+                step="0.1"
+              />
+              {state.formErrors?.landParcel && (
+                <p className="text-sm text-destructive">
+                  {state.formErrors.landParcel[0]}
+                </p>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="cropName">Crop Name</Label>
+              <Input
+                id="cropName"
+                name="cropName"
+                placeholder="e.g., 'Ragi'"
+                required
+              />
+              {state.formErrors?.cropName && (
+                <p className="text-sm text-destructive">
+                  {state.formErrors.cropName[0]}
+                </p>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="subsidiesFor">Subsidies for</Label>
+              <div className="relative">
                 <Textarea
-                  id="situation"
-                  name="situation"
-                  placeholder="e.g., 'I am a small farmer in Karnataka with 2 acres of land, growing ragi and groundnuts. I need help with irrigation.'"
-                  rows={4}
+                  id="subsidiesFor"
+                  name="subsidiesFor"
+                  placeholder="e.g., 'Irrigation equipment, seeds, and fertilizers'"
+                  rows={1}
                   required
                   className="pr-10"
                 />
-                <Button type="button" variant="ghost" size="icon" className="absolute bottom-2 right-1 h-7 w-7">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute bottom-1 right-1 h-7 w-7"
+                >
                   <Mic className="h-4 w-4" />
                   <span className="sr-only">Use voice input</span>
                 </Button>
               </div>
-              {state.formErrors?.situation && (
-                <p className="text-sm text-destructive">{state.formErrors.situation[0]}</p>
+              {state.formErrors?.subsidiesFor && (
+                <p className="text-sm text-destructive">
+                  {state.formErrors.subsidiesFor[0]}
+                </p>
               )}
             </div>
           </CardContent>

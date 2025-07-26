@@ -1,4 +1,3 @@
-// Implemented by Gemini.
 'use server';
 
 /**
@@ -13,7 +12,10 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const FindSchemesInputSchema = z.object({
-  situation: z.string().describe('The farmer\'s situation and the crops they are growing.'),
+  location: z.string().describe("The farmer's location (e.g., city, state)."),
+  landParcel: z.number().describe('The size of the land parcel in acres.'),
+  cropName: z.string().describe('The name of the crop the farmer is growing.'),
+  subsidiesFor: z.string().describe('The specific subsidies the farmer is looking for (e.g., irrigation, seeds, fertilizers).'),
 });
 export type FindSchemesInput = z.infer<typeof FindSchemesInputSchema>;
 
@@ -40,11 +42,15 @@ const prompt = ai.definePrompt({
   output: {schema: FindSchemesOutputSchema},
   prompt: `You are an expert in Indian government schemes for farmers.
 
-You will be provided with a description of the farmer's situation and the crops they are growing. Your goal is to identify relevant government schemes that the farmer might be eligible for.
+You will be provided with a detailed description of a farmer's situation. Your goal is to identify relevant government schemes that the farmer might be eligible for.
 
-Situation: {{{situation}}}
+Farmer's Situation:
+- Location: {{{location}}}
+- Land Parcel Size: {{{landParcel}}} acres
+- Crop: {{{cropName}}}
+- Looking for subsidies for: {{{subsidiesFor}}}
 
-Based on the situation above, identify relevant government schemes and provide a detailed description of each scheme, including eligibility criteria, benefits, and how to apply.`,  
+Based on the situation above, identify relevant government schemes and provide a detailed description of each scheme, including eligibility criteria, benefits, and how to apply.`,
 });
 
 const findSchemesFlow = ai.defineFlow(

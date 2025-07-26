@@ -4,14 +4,20 @@ import { z } from "zod";
 import { findSchemes, type FindSchemesOutput } from "@/ai/flows/scheme-finder";
 
 const formSchema = z.object({
-  situation: z.string().min(10, "Please provide a more detailed description of your situation."),
+  location: z.string().min(2, "Please provide a valid location."),
+  landParcel: z.coerce.number().positive("Land parcel must be a positive number."),
+  cropName: z.string().min(3, "Please provide a valid crop name."),
+  subsidiesFor: z.string().min(10, "Please describe the subsidies you are looking for in more detail."),
 });
 
 type State = {
   data: FindSchemesOutput | null;
   error: string | null;
   formErrors?: {
-    situation?: string[];
+    location?: string[];
+    landParcel?: string[];
+    cropName?: string[];
+    subsidiesFor?: string[];
   };
 };
 
@@ -20,7 +26,10 @@ export async function getSchemes(
   formData: FormData
 ): Promise<State> {
   const validatedFields = formSchema.safeParse({
-    situation: formData.get("situation"),
+    location: formData.get("location"),
+    landParcel: formData.get("landParcel"),
+    cropName: formData.get("cropName"),
+    subsidiesFor: formData.get("subsidiesFor"),
   });
 
   if (!validatedFields.success) {
@@ -31,11 +40,14 @@ export async function getSchemes(
     };
   }
 
-  const { situation } = validatedFields.data;
+  const { location, landParcel, cropName, subsidiesFor } = validatedFields.data;
 
   try {
     const result = await findSchemes({
-      situation,
+      location,
+      landParcel,
+      cropName,
+      subsidiesFor,
     });
 
     return { data: result, error: null };
