@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { getAdvice } from "./actions";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -101,11 +102,11 @@ function ResultCard({
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <h3 className="font-semibold text-lg text-accent">Diagnosis</h3>
+          <h3 className="font-semibold text-lg text-primary">Diagnosis</h3>
           <p className="text-muted-foreground">{data.diagnosis}</p>
         </div>
         <div>
-          <h3 className="font-semibold text-lg text-accent">Treatment Plan</h3>
+          <h3 className="font-semibold text-lg text-primary">Treatment Plan</h3>
           <p className="text-muted-foreground whitespace-pre-wrap">{data.treatmentPlan}</p>
         </div>
       </CardContent>
@@ -121,6 +122,21 @@ export default function DoctorAgroPage() {
   });
   const { pending: isPending } = useFormStatus();
   const formRef = useRef<HTMLFormElement>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setImagePreview(null);
+    }
+  };
+
 
   useEffect(() => {
     if (state.error && !state.formErrors) {
@@ -132,6 +148,7 @@ export default function DoctorAgroPage() {
     }
     if (state.data) {
         formRef.current?.reset();
+        setImagePreview(null);
     }
   }, [state, toast]);
 
@@ -168,8 +185,18 @@ export default function DoctorAgroPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="image">Upload Photo</Label>
+               {imagePreview && (
+                <div className="mt-4 relative aspect-video w-full max-w-sm mx-auto">
+                    <Image
+                        src={imagePreview}
+                        alt="Uploaded crop"
+                        fill
+                        className="rounded-md object-cover"
+                    />
+                </div>
+                )}
               <div className="relative">
-                <Input id="image" name="image" type="file" accept="image/*" required />
+                <Input id="image" name="image" type="file" accept="image/*" required onChange={handleImageChange} />
                 <Button type="button" variant="ghost" size="icon" className="absolute bottom-1 right-1 h-8 w-8" onClick={() => document.getElementById('image')?.click()}>
                   <Camera className="h-4 w-4" />
                   <span className="sr-only">Use camera</span>

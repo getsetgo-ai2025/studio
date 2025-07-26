@@ -19,13 +19,13 @@ export default function WelcomePage() {
         alt="A beautiful farm landscape"
         data-ai-hint="farm landscape"
         fill
-        className="object-cover -z-10 brightness-[0.6]"
+        className="object-cover -z-10 brightness-[0.3]"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-background/50 to-transparent -z-10" />
 
-      <Card className="w-full max-w-md bg-card/80 backdrop-blur-sm">
+      <Card className="w-full max-w-md border-0 bg-card/70 backdrop-blur-sm">
         <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-headline text-primary">
+          <CardTitle className="text-4xl font-headline text-primary">
             Raita Sahayak
           </CardTitle>
           <CardDescription className="text-foreground/80">

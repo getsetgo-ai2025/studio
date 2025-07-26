@@ -118,15 +118,15 @@ function ResultCard({
               <AccordionContent className="space-y-4">
                 <p className="text-muted-foreground">{scheme.description}</p>
                 <div className="space-y-2">
-                    <h4 className="font-semibold text-accent">Eligibility Criteria</h4>
+                    <h4 className="font-semibold text-accent-foreground">Eligibility Criteria</h4>
                     <p className="text-sm text-muted-foreground">{scheme.eligibilityCriteria}</p>
                 </div>
                 <div className="space-y-2">
-                    <h4 className="font-semibold text-accent">Benefits</h4>
+                    <h4 className="font-semibold text-accent-foreground">Benefits</h4>
                     <p className="text-sm text-muted-foreground">{scheme.benefits}</p>
                 </div>
                 <div className="space-y-2">
-                    <h4 className="font-semibold text-accent">How to Apply</h4>
+                    <h4 className="font-semibold text-accent-foreground">How to Apply</h4>
                     <p className="text-sm text-muted-foreground">{scheme.howToApply}</p>
                 </div>
               </AccordionContent>
