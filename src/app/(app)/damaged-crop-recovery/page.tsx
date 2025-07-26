@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
-import { AlertCircle, Info, Loader2, Phone, ShoppingCart, Recycle, ThumbsUp, Users } from 'lucide-react';
+import { AlertCircle, Info, Loader2, Phone, ShoppingCart, Recycle, ThumbsUp, Users, ShieldAlert, BadgePercent, TrendingDown, TrendingUp } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/hooks/use-language';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -24,6 +24,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { type DamagedCropOutput } from '@/ai/flows/damaged-crop-recovery';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Progress } from '@/components/ui/progress';
 
 const damageTypes = [
     { id: 'Heavy Rain', label: { en: 'Heavy Rain', kn: 'ಭಾರೀ ಮಳೆ' } },
@@ -89,6 +90,9 @@ function ResultCard({
 
     if (!data) return null;
 
+    const recoveryColor = data.recoveryProbability > 60 ? 'text-green-600' : data.recoveryProbability > 30 ? 'text-yellow-600' : 'text-red-600';
+    const RecoveryIcon = data.recoveryProbability > 40 ? TrendingUp : TrendingDown;
+
     return (
         <Card>
             <CardHeader>
@@ -98,6 +102,24 @@ function ResultCard({
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
+                 <div className="space-y-4">
+                     <h3 className="font-semibold text-lg text-primary flex items-center gap-2"><BadgePercent /> {language === 'kn' ? 'ಬೆಳೆ ಉಳಿಸುವ ಸಂಭವನೀಯತೆ' : 'Crop Salvage Probability'}</h3>
+                     <div className='flex items-center gap-4'>
+                        <RecoveryIcon className={`h-8 w-8 ${recoveryColor}`} />
+                        <span className={`text-4xl font-bold ${recoveryColor}`}>{data.recoveryProbability}%</span>
+                     </div>
+                     <Progress value={data.recoveryProbability} className="h-3" />
+                 </div>
+
+                 {data.recommendation && (
+                    <Alert variant={data.recoveryProbability < 40 ? "destructive" : "default"}>
+                        <ShieldAlert className="h-4 w-4" />
+                        <AlertTitle>{language === 'kn' ? 'ಶಿಫಾರಸು' : 'Recommendation'}</AlertTitle>
+                        <AlertDescription>{data.recommendation}</AlertDescription>
+                    </Alert>
+                 )}
+
+
                  {data.salvagingMethods?.length > 0 && (
                      <div>
                         <h3 className="font-semibold text-lg text-primary flex items-center gap-2 mb-2"><ThumbsUp /> {language === 'kn' ? 'ಪಾರುಗಾಣಿಕಾ ವಿಧಾನಗಳು' : 'Salvaging Methods'}</h3>

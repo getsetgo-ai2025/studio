@@ -26,9 +26,11 @@ const prompt = ai.definePrompt({
   prompt: `You are an expert agricultural recovery specialist. A farmer has provided details about their damaged crop.
 
   Your tasks are:
-  1.  Based on the crop name, stage, damage type, and extent, provide a list of practical and effective salvaging methods.
-  2.  Use the findAlternativeBuyersTool to identify nearby buyers who might be interested in purchasing the damaged crop for alternative uses (e.g., animal feed, biofuel, compost).
-  3.  Return the list of salvaging methods and the list of buyers found by the tool.
+  1.  Based on the crop name, stage, damage type, and extent, estimate the probability of saving the crop as a percentage.
+  2.  Provide a list of practical and effective salvaging methods.
+  3.  If the recovery probability is low (e.g., below 40%), provide a specific recommendation to the farmer, suggesting they focus on alternative markets.
+  4.  Use the findAlternativeBuyersTool to identify nearby buyers who might be interested in purchasing the damaged crop for alternative uses (e.g., animal feed, biofuel, compost).
+  5.  Return the probability, salvaging methods, recommendation (if applicable), and the list of buyers found by the tool.
 
   Farmer's Input:
   - Crop Name: {{{cropName}}}

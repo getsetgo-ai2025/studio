@@ -10,11 +10,13 @@ export const DamagedCropInputSchema = z.object({
 export type DamagedCropInput = z.infer<typeof DamagedCropInputSchema>;
 
 export const DamagedCropOutputSchema = z.object({
+    recoveryProbability: z.number().describe('The estimated probability (as a percentage, e.g., 65) of successfully saving the crop.'),
     salvagingMethods: z.array(z.string()).describe('A list of suggested methods to salvage the damaged crop.'),
     alternativeBuyers: z.array(z.object({
         name: z.string().describe("The name of the buyer or company."),
         contact: z.string().describe("The contact number of the buyer."),
         buyerType: z.string().describe("The type of buyer (e.g., Poultry Feed Unit, Juice Factory, Ethanol Plant)."),
     })).describe('A list of potential nearby alternative buyers for the damaged crop.'),
+    recommendation: z.string().optional().describe('A specific recommendation for the farmer if the recovery probability is low (e.g., below 40%). This should guide them on whether to pursue salvaging or consider alternative options immediately.'),
 });
 export type DamagedCropOutput = z.infer<typeof DamagedCropOutputSchema>;

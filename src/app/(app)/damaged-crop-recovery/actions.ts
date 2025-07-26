@@ -48,7 +48,11 @@ export async function getAdvice(
     const result = await getDamagedCropAdvice(inputData);
 
     if (language === 'kn') {
-        const [translatedSalvagingMethods, translatedBuyers] = await Promise.all([
+        const [
+            translatedSalvagingMethods, 
+            translatedBuyers,
+            translatedRecommendation,
+        ] = await Promise.all([
              Promise.all(result.salvagingMethods.map(m => translateText({ text: m, targetLanguage: 'kn' }))),
              Promise.all(result.alternativeBuyers.map(async (buyer) => {
                 const [translatedName, translatedBuyerType] = await Promise.all([
@@ -56,13 +60,16 @@ export async function getAdvice(
                     translateText({ text: buyer.buyerType, targetLanguage: 'kn' }),
                 ]);
                 return { ...buyer, name: translatedName.translatedText, buyerType: translatedBuyerType.translatedText };
-             }))
+             })),
+             result.recommendation ? translateText({ text: result.recommendation, targetLanguage: 'kn' }) : Promise.resolve(null),
         ]);
 
         return {
             data: {
+                ...result,
                 salvagingMethods: translatedSalvagingMethods.map(m => m.translatedText),
                 alternativeBuyers: translatedBuyers,
+                recommendation: translatedRecommendation?.translatedText,
             },
             error: null
         }

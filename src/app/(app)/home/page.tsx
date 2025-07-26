@@ -9,13 +9,16 @@ import { Newspaper, Home as HomeIcon, Loader2 } from "lucide-react";
 import { useLanguage } from "@/hooks/use-language";
 import { getRecentNews, type NewsArticle } from "@/ai/flows/news-generator";
 import { useEffect, useState } from "react";
-import droneFarmer from "@/app/farmer-with-drone.jpg";
+import farmerWithTablet from "@/app/images/smart-farming.png";
+import droneFarmer from "@/app/images/farmer-with-drone.png";
+import lushGreenCrops from "@/app/images/lush-green-crops.jpeg";
+import automatedIrrigationSystem from "@/app/images/auto-irrigation.jpeg";
 
 const slideshowImages: { src: string | StaticImageData; alt: { en: string; kn: string; }; hint: string; }[] = [
-    { src: "https://images.unsplash.com/photo-1620912189833-910c84a45330?q=80&w=1920&auto=format&fit=crop", alt: { en: "Farmer with a tablet", kn: "ಟ್ಯಾಬ್ಲೆಟ್ ಹಿಡಿದ ರೈತ" }, hint: "farmer tablet" },
+    { src: farmerWithTablet, alt: { en: "Farmer with a tablet", kn: "ಟ್ಯಾಬ್ಲೆಟ್ ಹಿಡಿದ ರೈತ" }, hint: "farmer tablet" },
     { src: droneFarmer, alt: { en: "Farmer with a drone", kn: "ಡ್ರೋನ್ ಹೊಂದಿರುವ ರೈತ" }, hint: "farmer drone" },
-    { src: "https://images.unsplash.com/photo-1625246333195-78d9c38AD449?q=80&w=1920&auto=format&fit=crop", alt: { en: "Lush green crops in a field", kn: "ಹೊಲದಲ್ಲಿ ಸೊಂಪಾದ ಹಸಿರು ಬೆಳೆಗಳು" }, hint: "green crops" },
-    { src: "https://images.unsplash.com/photo-1591784465425-43a91a19b58a?q=80&w=1920&auto=format&fit=crop", alt: { en: "Automated irrigation system", kn: "ಸ್ವಯಂಚಾಲಿತ ನೀರಾವರಿ ವ್ಯವಸ್ಥೆ" }, hint: "irrigation system" },
+    { src: lushGreenCrops, alt: { en: "Lush green crops in a field", kn: "ಹೊಲದಲ್ಲಿ ಸೊಂಪಾದ ಹಸಿರು ಬೆಳೆಗಳು" }, hint: "green crops" },
+    { src: automatedIrrigationSystem, alt: { en: "Automated irrigation system", kn: "ಸ್ವಯಂಚಾಲಿತ ನೀರಾವರಿ ವ್ಯವಸ್ಥೆ" }, hint: "irrigation system" },
 ];
 
 function NewsSection() {
