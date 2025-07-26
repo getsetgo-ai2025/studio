@@ -55,12 +55,6 @@ import { useAuth } from "@/hooks/use-auth";
 
 const navItems = [
   {
-    href: "/home",
-    icon: Home,
-    label: { en: "Home", kn: "ಮುಖಪುಟ" },
-    tooltip: { en: "Home", kn: "ಮುಖಪುಟ" },
-  },
-  {
     href: "/doctor-agro",
     icon: Stethoscope,
     label: { en: "Doctor Agro", kn: "ಡಾಕ್ಟರ್ ಆಗ್ರೋ" },
@@ -191,6 +185,12 @@ function AppHeader() {
     <header className="flex h-14 items-center gap-4 border-b bg-card px-4 lg:h-[60px] lg:px-6">
       <SidebarTrigger className="md:hidden" />
       <div className="w-full flex-1" />
+       <Button variant="ghost" asChild>
+            <Link href="/home">
+                <Home className="mr-2 h-5 w-5" />
+                <span>{language === 'kn' ? 'ಮುಖಪುಟ' : 'Home'}</span>
+            </Link>
+        </Button>
        <Button variant="ghost" asChild>
             <Link href="/contact">
                 <LifeBuoy className="mr-2 h-5 w-5" />
