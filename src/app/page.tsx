@@ -1,64 +1,8 @@
-import Image from "next/image";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { ArrowRight, User, UserPlus } from "lucide-react";
 
-export default function WelcomePage() {
-  return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center p-4">
-      <Image
-        src="https://placehold.co/1920x1080.png"
-        alt="A beautiful farm landscape"
-        data-ai-hint="farm landscape"
-        fill
-        className="object-cover -z-10 brightness-[0.3]"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-background/50 to-transparent -z-10" />
+import { redirect } from 'next/navigation';
 
-      <Card className="w-full max-w-md border-0 bg-card/70 backdrop-blur-sm">
-        <CardHeader className="text-center">
-          <CardTitle className="text-4xl font-headline text-primary">
-            Raita Sahayak
-          </CardTitle>
-          <CardDescription className="text-foreground/80">
-            Your AI-powered agricultural assistant. Get expert advice, market insights, and scheme information instantly.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-            <div className="flex flex-col gap-4">
-                <Button asChild className="w-full font-bold">
-                    <Link href="/login">
-                        Login
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
-                </Button>
-                <Button asChild variant="secondary" className="w-full font-bold">
-                    <Link href="/register">
-                        Register
-                        <UserPlus className="ml-2 h-4 w-4" />
-                    </Link>
-                </Button>
-                 <Button asChild variant="ghost" className="w-full">
-                    <Link href="/doctor-agro">
-                        Continue as Guest
-                    </Link>
-                </Button>
-            </div>
-        </CardContent>
-        <CardFooter>
-            <p className="text-center text-xs text-muted-foreground mx-auto">
-                Login or register to create your profile and get personalized assistance.
-            </p>
-        </CardFooter>
-      </Card>
-    </main>
-  );
+export default function RootPage() {
+  // The main entry point now directly redirects to the app's layout,
+  // which will handle authentication and show the home page.
+  redirect('/home');
 }

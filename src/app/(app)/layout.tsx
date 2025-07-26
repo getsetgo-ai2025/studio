@@ -257,6 +257,8 @@ function AppSidebar() {
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
     const { loading } = useAuth();
+    const router = useRouter();
+    const pathname = usePathname();
 
     if (loading) {
         return (
@@ -266,17 +268,22 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         )
     }
 
-    return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <div className="flex flex-col">
-          <AppHeader />
-          <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 bg-background">
-            {children}
-          </main>
-        </div>
-      </SidebarInset>
-    </SidebarProvider>
-    )
+    if (!loading && !['/login', '/register'].includes(pathname)) {
+        return (
+        <SidebarProvider>
+          <AppSidebar />
+          <SidebarInset>
+            <div className="flex flex-col">
+              <AppHeader />
+              <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 bg-background">
+                {children}
+              </main>
+            </div>
+          </SidebarInset>
+        </SidebarProvider>
+        )
+    }
+    
+    // For login and register pages
+    return <>{children}</>;
 }

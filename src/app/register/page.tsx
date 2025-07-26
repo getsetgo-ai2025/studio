@@ -29,7 +29,7 @@ export default function RegisterPage() {
 
   useEffect(() => {
       if (!authLoading && user) {
-          router.push('/');
+          router.push('/home');
       }
   }, [user, authLoading, router]);
 
@@ -50,7 +50,7 @@ export default function RegisterPage() {
         title: "Registration Successful",
         description: "Your account has been created.",
       });
-      router.push('/');
+      router.push('/home');
     } catch (e) {
         const error = e as FirebaseError;
         let errorMessage = "An unknown error occurred.";

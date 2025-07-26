@@ -29,7 +29,7 @@ export default function LoginPage() {
 
   useEffect(() => {
       if (!authLoading && user) {
-          router.push('/');
+          router.push('/home');
       }
   }, [user, authLoading, router]);
 
@@ -44,7 +44,7 @@ export default function LoginPage() {
         title: "Login Successful",
         description: "Welcome back!",
       });
-      router.push('/');
+      router.push('/home');
     } catch (e) {
         const error = e as FirebaseError;
         let errorMessage = "An unknown error occurred.";
