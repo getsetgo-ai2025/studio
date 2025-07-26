@@ -65,7 +65,7 @@ const prompt = ai.definePrompt({
 
   Your task is to generate a list of 3 recent, realistic-sounding news articles relevant to farmers in Karnataka, India. The news should cover topics like new government schemes, technological advancements in agriculture, market price updates for local crops, or weather advisories.
 
-  Ensure the publication dates are from the recent past of the current year, 2025. Do not generate dates from the future.
+  Ensure the publication dates are between January 2025 and June 2025.
   
   The articles should be in English, they will be translated later if needed.`,
 });
