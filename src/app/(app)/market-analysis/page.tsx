@@ -12,6 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -131,18 +132,30 @@ export default function MarketAnalysisPage() {
         <CardHeader>
           <CardTitle className="font-headline">Market Analysis</CardTitle>
           <CardDescription>
-            Enter a crop name to get an AI-powered market overview and pricing insights.
+            Enter a crop name and location to get an AI-powered market overview.
           </CardDescription>
         </CardHeader>
         <form ref={formRef} action={formAction}>
-          <CardContent>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="location">Location</Label>
+              <Input
+                id="location"
+                name="location"
+                placeholder="e.g., 'Karnataka', 'Maharashtra'"
+                required
+              />
+              {state.formErrors?.location && (
+                <p className="text-sm text-destructive">{state.formErrors.location[0]}</p>
+              )}
+            </div>
             <div className="space-y-2">
               <Label htmlFor="cropDescription">Crop Name or Description</Label>
                <div className="relative">
                 <Textarea
                   id="cropDescription"
                   name="cropDescription"
-                  placeholder="e.g., 'Basmati Rice', 'Organic Mangoes from Maharashtra'"
+                  placeholder="e.g., 'Basmati Rice', 'Organic Mangoes'"
                   rows={2}
                   required
                   className="pr-10"

@@ -15,11 +15,14 @@ const MarketOverviewInputSchema = z.object({
   cropDescription: z
     .string()
     .describe('A description of the crop for which market analysis is needed. This can be voice input or text.'),
+  location: z
+    .string()
+    .describe('The geographical location (e.g., city, state, or region) for the market analysis.'),
 });
 export type MarketOverviewInput = z.infer<typeof MarketOverviewInputSchema>;
 
 const MarketOverviewOutputSchema = z.object({
-  marketOverview: z.string().describe('An overview of the market analysis for the specified crop, including pricing insights.'),
+  marketOverview: z.string().describe('An overview of the market analysis for the specified crop and location, including pricing insights.'),
 });
 export type MarketOverviewOutput = z.infer<typeof MarketOverviewOutputSchema>;
 
@@ -33,9 +36,10 @@ const prompt = ai.definePrompt({
   output: {schema: MarketOverviewOutputSchema},
   prompt: `You are an AI market analyst specializing in providing crop pricing insights.
 
-  Based on the provided crop description, generate an overview of the market, including pricing insights.
+  Based on the provided crop description and location, generate an overview of the market, including pricing insights.
 
-  Crop Description: {{{cropDescription}}}`,
+  Crop Description: {{{cropDescription}}}
+  Location: {{{location}}}`,
 });
 
 const marketOverviewFlow = ai.defineFlow(
