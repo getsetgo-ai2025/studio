@@ -4,42 +4,75 @@
 import Image from "next/image";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { Newspaper, Home as HomeIcon } from "lucide-react";
+import { Newspaper, Home as HomeIcon, Loader2 } from "lucide-react";
 import { useLanguage } from "@/hooks/use-language";
+import { getRecentNews, type NewsArticle } from "@/ai/flows/news-generator";
+import { useEffect, useState } from "react";
 
 const slideshowImages = [
-    { src: "https://placehold.co/800x400.png", alt: { en: "Lush green field", kn: "ಹಚ್ಚ ಹಸಿರಿನ ಹೊಲ" }, hint: "green field" },
-    { src: "https://placehold.co/800x400.png", alt: { en: "Farmer smiling", kn: "ನಗುತ್ತಿರುವ ರೈತ" }, hint: "farmer smiling" },
-    { src: "https://placehold.co/800x400.png", alt: { en: "Modern farming equipment", kn: "ಆಧುನಿಕ ಕೃಷಿ ಉಪಕರಣಗಳು" }, hint: "modern farming" },
-    { src: "https://placehold.co/800x400.png", alt: { en: "Healthy crop harvest", kn: "ಆರೋಗ್ಯಕರ ಬೆಳೆ ಸುಗ್ಗಿಯ" }, hint: "crop harvest" },
+    { src: "https://placehold.co/800x400.png", alt: { en: "Farmer using a drone", kn: "ಡ್ರೋನ್ ಬಳಸುತ್ತಿರುವ ರೈತ" }, hint: "drone farming" },
+    { src: "https://placehold.co/800x400.png", alt: { en: "Smart farm with sensors", kn: "ಸಂವೇದಕಗಳೊಂದಿಗೆ ಸ್ಮಾರ್ಟ್ ಫಾರ್ಮ್" }, hint: "agriculture technology" },
+    { src: "https://placehold.co/800x400.png", alt: { en: "Automated irrigation system", kn: "ಸ್ವಯಂಚಾಲಿತ ನೀರಾವರಿ ವ್ಯವಸ್ಥೆ" }, hint: "smart irrigation" },
+    { src: "https://placehold.co/800x400.png", alt: { en: "Farmer with a tablet", kn: "ಟ್ಯಾಬ್ಲೆಟ್ ಹಿಡಿದ ರೈತ" }, hint: "farmer tablet" },
 ];
 
-const newsItems = [
-    {
-        title: { en: "New Irrigation Scheme Announced for Karnataka Farmers", kn: "ಕರ್ನಾಟಕ ರೈತರಿಗೆ ಹೊಸ ನೀರಾವರಿ ಯೋಜನೆ ಪ್ರಕಟ" },
-        date: { en: "October 26, 2023", kn: "ಅಕ್ಟೋಬರ್ ೨೬, ೨೦೨೩" },
-        summary: { 
-            en: "The state government has launched a new scheme to provide subsidies on drip irrigation systems to conserve water.",
-            kn: "ನೀರನ್ನು ಸಂರಕ್ಷಿಸಲು ಹನಿ ನೀರಾವರಿ ವ್ಯವಸ್ಥೆಗಳ ಮೇಲೆ ಸಬ್ಸಿಡಿ ನೀಡಲು ರಾಜ್ಯ ಸರ್ಕಾರ ಹೊಸ ಯೋಜನೆಯನ್ನು ಪ್ರಾರಂಭಿಸಿದೆ."
-        },
-    },
-    {
-        title: { en: "Ragi MSP Increased Ahead of Harvest Season", kn: "ಕೊಯ್ಲು ಋತುವಿನ ಮುಂಚಿತವಾಗಿ ರಾಗಿ MSP ಹೆಚ್ಚಳ" },
-        date: { en: "October 24, 2023", kn: "ಅಕ್ಟೋಬರ್ ೨೪, ೨೦೨೩" },
-        summary: {
-            en: "The central government has increased the Minimum Support Price for Ragi, benefiting thousands of farmers in the state.",
-            kn: "ಕೇಂದ್ರ ಸರ್ಕಾರ ರಾಗಿಗೆ ಕನಿಷ್ಠ ಬೆಂಬಲ ಬೆಲೆಯನ್ನು ಹೆಚ್ಚಿಸಿದ್ದು, ರಾಜ್ಯದ ಸಾವಿರಾರು ರೈತರಿಗೆ ಅನುಕೂಲವಾಗಿದೆ."
-        },
-    },
-     {
-        title: { en: "Workshop on Organic Farming to be Held in Mysuru", kn: "ಮೈಸೂರಿನಲ್ಲಿ ಸಾವಯವ ಕೃಷಿ ಕುರಿತು ಕಾರ್ಯಾಗಾರ" },
-        date: { en: "October 22, 2023", kn: "ಅಕ್ಟೋಬರ್ ೨೨, ೨೦೨೩" },
-        summary: {
-            en: "An upcoming workshop aims to educate farmers on the benefits and techniques of organic farming practices.",
-            kn: "ಮುಂಬರುವ ಕಾರ್ಯಾಗಾರವು ರೈತರಿಗೆ ಸಾವಯವ ಕೃಷಿ ಪದ್ಧತಿಗಳ ಪ್ರಯೋಜನಗಳು ಮತ್ತು ತಂತ್ರಗಳ ಬಗ್ಗೆ ಶಿಕ್ಷಣ ನೀಡುವ ಗುರಿಯನ್ನು ಹೊಂದಿದೆ."
-        },
-    },
-];
+function NewsSection() {
+    const { language } = useLanguage();
+    const [newsItems, setNewsItems] = useState<NewsArticle[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        async function fetchNews() {
+            try {
+                setLoading(true);
+                setError(null);
+                const newsData = await getRecentNews(language);
+                setNewsItems(newsData.articles);
+            } catch (err) {
+                console.error("Failed to fetch news:", err);
+                setError(language === 'kn' ? 'ಸುದ್ದಿ ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ.' : 'Failed to load news.');
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchNews();
+    }, [language]);
+
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle className="font-headline flex items-center gap-2">
+                    <Newspaper /> {language === 'kn' ? 'ಇತ್ತೀಚಿನ ಸುದ್ದಿಗಳು' : 'Recent News'}
+                </CardTitle>
+                <CardDescription>
+                    {language === 'kn' ? 'ಕರ್ನಾಟಕದ ರೈತರಿಗೆ ಸಂಬಂಧಿಸಿದ ನವೀಕರಣಗಳು' : 'Updates relevant to farmers in Karnataka'}
+                </CardDescription>
+            </CardHeader>
+            <CardContent className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {loading && (
+                    <>
+                        <Card><CardHeader><CardTitle className="h-6 w-3/4 bg-muted animate-pulse rounded-md"></CardTitle><CardDescription className="h-4 w-1/2 bg-muted animate-pulse rounded-md"></CardDescription></CardHeader><CardContent><div className="h-16 bg-muted animate-pulse rounded-md"></div></CardContent></Card>
+                        <Card><CardHeader><CardTitle className="h-6 w-3/4 bg-muted animate-pulse rounded-md"></CardTitle><CardDescription className="h-4 w-1/2 bg-muted animate-pulse rounded-md"></CardDescription></CardHeader><CardContent><div className="h-16 bg-muted animate-pulse rounded-md"></div></CardContent></Card>
+                        <Card><CardHeader><CardTitle className="h-6 w-3/4 bg-muted animate-pulse rounded-md"></CardTitle><CardDescription className="h-4 w-1/2 bg-muted animate-pulse rounded-md"></CardDescription></CardHeader><CardContent><div className="h-16 bg-muted animate-pulse rounded-md"></div></CardContent></Card>
+                    </>
+                )}
+                {error && <p className="text-destructive col-span-full">{error}</p>}
+                {!loading && !error && newsItems.map((item, index) => (
+                    <Card key={index}>
+                        <CardHeader>
+                            <CardTitle className="text-lg">{item.title}</CardTitle>
+                            <CardDescription>{item.date}</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-sm text-muted-foreground">{item.summary}</p>
+                        </CardContent>
+                    </Card>
+                ))}
+            </CardContent>
+        </Card>
+    );
+}
 
 
 export default function HomePage() {
@@ -88,29 +121,7 @@ export default function HomePage() {
                 </CardContent>
             </Card>
 
-            <Card>
-                <CardHeader>
-                    <CardTitle className="font-headline flex items-center gap-2">
-                        <Newspaper /> {language === 'kn' ? 'ಇತ್ತೀಚಿನ ಸುದ್ದಿಗಳು' : 'Recent News'}
-                    </CardTitle>
-                    <CardDescription>
-                        {language === 'kn' ? 'ಕರ್ನಾಟಕದ ರೈತರಿಗೆ ಸಂಬಂಧಿಸಿದ ನವೀಕರಣಗಳು' : 'Updates relevant to farmers in Karnataka'}
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                    {newsItems.map((item, index) => (
-                        <Card key={index}>
-                            <CardHeader>
-                                <CardTitle className="text-lg">{item.title[language]}</CardTitle>
-                                <CardDescription>{item.date[language]}</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <p className="text-sm text-muted-foreground">{item.summary[language]}</p>
-                            </CardContent>
-                        </Card>
-                    ))}
-                </CardContent>
-            </Card>
+            <NewsSection />
         </div>
     );
 }
