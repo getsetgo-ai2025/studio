@@ -23,7 +23,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { AlertCircle, Loader2, Mic, MicOff, Volume2 } from "lucide-react";
+import { AlertCircle, Landmark, Loader2, Mic, MicOff, Volume2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/hooks/use-language";
 import { useSpeechRecognition } from "@/hooks/use-speech-recognition";
@@ -215,8 +215,8 @@ export default function GovtSchemesPage() {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="font-headline">
-            {language === 'kn' ? 'ಸರ್ಕಾರಿ ಯೋಜನೆ ಹುಡುಕಾಟ' : 'Government Scheme Finder'}
+          <CardTitle className="font-headline flex items-center gap-2">
+            <Landmark /> {language === 'kn' ? 'ಸರ್ಕಾರಿ ಯೋಜನೆ ಹುಡುಕಾಟ' : 'Government Scheme Finder'}
           </CardTitle>
           <CardDescription>
             {language === 'kn' ? 'ಸಂಬಂಧಿತ ಸರ್ಕಾರಿ ಯೋಜನೆಗಳನ್ನು ಹುಡುಕಲು ನಿಮ್ಮ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ.' : 'Enter your details to find relevant government schemes.'}

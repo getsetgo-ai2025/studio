@@ -18,7 +18,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Camera, AlertCircle, Loader2, Mic, Volume2, MicOff, CheckCircle2, HeartPulse, List, Store } from "lucide-react";
+import { Camera, AlertCircle, Loader2, Mic, Volume2, MicOff, CheckCircle2, HeartPulse, List, Store, Stethoscope } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/hooks/use-language";
 import { useSpeechRecognition } from "@/hooks/use-speech-recognition";
@@ -234,7 +234,9 @@ export default function DoctorAgroPage() {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="font-headline">{language === 'kn' ? 'ಬೆಳೆ ಆರೋಗ್ಯ ಸಲಹೆಗಾರ' : 'Crop Health Advisor'}</CardTitle>
+          <CardTitle className="font-headline flex items-center gap-2">
+            <Stethoscope /> {language === 'kn' ? 'ಬೆಳೆ ಆರೋಗ್ಯ ಸಲಹೆಗಾರ' : 'Crop Health Advisor'}
+          </CardTitle>
           <CardDescription>
             {language === 'kn' ? 'AI-ಚಾಲಿತ ರೋಗನಿರ್ಣಯಕ್ಕಾಗಿ ನಿಮ್ಮ ಬೆಳವಣಿಗೆಯ ಸಮಸ್ಯೆಯನ್ನು ವಿವರಿಸಿ ಮತ್ತು ಫೋಟೋವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ.' : 'Describe your crop\'s issue and upload a photo for an AI-powered diagnosis.'}
           </CardDescription>

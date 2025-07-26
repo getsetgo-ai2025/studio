@@ -17,7 +17,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AlertCircle, Loader2, Mic, MicOff, Volume2, Target, TrendingUp, Users } from "lucide-react";
+import { AlertCircle, LineChart, Loader2, Mic, MicOff, Volume2, Target, TrendingUp, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/hooks/use-language";
 import { useSpeechRecognition } from "@/hooks/use-speech-recognition";
@@ -202,7 +202,9 @@ export default function MarketAnalysisPage() {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="font-headline">{language === 'kn' ? 'ಮಾರುಕಟ್ಟೆ ವಿಶ್ಲೇಷಣೆ' : 'Market Analysis'}</CardTitle>
+          <CardTitle className="font-headline flex items-center gap-2">
+            <LineChart /> {language === 'kn' ? 'ಮಾರುಕಟ್ಟೆ ವಿಶ್ಲೇಷಣೆ' : 'Market Analysis'}
+          </CardTitle>
           <CardDescription>
             {language === 'kn' ? 'AI-ಚಾಲಿತ ಮಾರುಕಟ್ಟೆ ಅವಲೋಕನವನ್ನು ಪಡೆಯಲು ಬೆಳೆ ಹೆಸರು ಮತ್ತು ಸ್ಥಳವನ್ನು ನಮೂದಿಸಿ.' : 'Enter a crop name and location to get an AI-powered market overview.'}
           </CardDescription>
