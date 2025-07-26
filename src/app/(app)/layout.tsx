@@ -43,6 +43,8 @@ import {
   Loader2,
   LogIn,
   UserPlus,
+  LifeBuoy,
+  Info,
 } from "lucide-react";
 import { useLanguage } from "@/hooks/use-language";
 import { useAuth } from "@/hooks/use-auth";
@@ -73,6 +75,21 @@ const navItems = [
     label: { en: "Crop Recovery", kn: "ಬೆಳೆ ಚೇತರಿಕೆ" },
     tooltip: { en: "Damaged Crop Recovery & Market Finder", kn: "ಹಾನಿಗೊಳಗಾದ ಬೆಳೆ ಚೇತರಿಕೆ ಮತ್ತು ಮಾರುಕಟ್ಟೆ ಶೋಧಕ" },
   },
+];
+
+const secondaryNavItems = [
+    {
+        href: "/support",
+        icon: LifeBuoy,
+        label: { en: "Support", kn: "ಬೆಂಬಲ" },
+        tooltip: { en: "Support / Call Us", kn: "ಬೆಂಬಲ / ನಮಗೆ ಕರೆ ಮಾಡಿ" },
+    },
+    {
+        href: "/about",
+        icon: Info,
+        label: { en: "About Us", kn: "ನಮ್ಮ ಬಗ್ಗೆ" },
+        tooltip: { en: "About Raita Sahayak", kn: "ರೈತ ಸಹಾಯಕ್ ಬಗ್ಗೆ" },
+    },
 ];
 
 function LanguageSwitcher() {
@@ -190,6 +207,24 @@ function AppSidebar() {
       <SidebarContent>
         <SidebarMenu>
           {navItems.map((item) => (
+            <SidebarMenuItem key={item.href}>
+              <SidebarMenuButton
+                asChild
+                isActive={pathname === item.href}
+                tooltip={{ children: item.tooltip[language], side: "right", align: "center" }}
+              >
+                <Link href={item.href}>
+                  <item.icon />
+                  <span>{item.label[language]}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+      </SidebarContent>
+       <SidebarContent className="flex-grow-0">
+        <SidebarMenu>
+          {secondaryNavItems.map((item) => (
             <SidebarMenuItem key={item.href}>
               <SidebarMenuButton
                 asChild
