@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import { useEffect, useRef, useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { getAnalysis } from "./actions";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,10 +20,10 @@ import { AlertCircle, Loader2, Mic, Volume2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 function SubmitButton() {
-  const { pending } = useFormStatus();
+  const { pending: isPending } = useFormStatus();
   return (
-    <Button type="submit" className="w-full" disabled={pending}>
-      {pending ? (
+    <Button type="submit" className="w-full" disabled={isPending}>
+      {isPending ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           Analyzing...
@@ -38,7 +38,7 @@ function SubmitButton() {
 function ResultCard({
   data,
   error,
-  pending,
+  pending: isPending,
 }: {
   data: any;
   error: string | null;
@@ -53,7 +53,7 @@ function ResultCard({
     }
   };
 
-  if (pending) {
+  if (isPending) {
     return (
       <Card>
         <CardHeader>
@@ -105,11 +105,11 @@ function ResultCard({
 
 export default function MarketAnalysisPage() {
   const { toast } = useToast();
-  const [state, formAction] = useFormState(getAnalysis, {
+  const [state, formAction] = useActionState(getAnalysis, {
     data: null,
     error: null,
   });
-  const { pending } = useFormStatus();
+  const { pending: isPending } = useFormStatus();
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
@@ -163,7 +163,7 @@ export default function MarketAnalysisPage() {
         </form>
       </Card>
 
-      <ResultCard data={state.data} error={state.error} pending={pending} />
+      <ResultCard data={state.data} error={state.error} pending={isPending} />
     </div>
   );
 }
