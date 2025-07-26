@@ -1,7 +1,8 @@
 "use server";
 
 import { z } from "zod";
-import { getDamagedCropAdvice, type DamagedCropOutput, DamagedCropInputSchema } from "@/ai/flows/damaged-crop-recovery";
+import { getDamagedCropAdvice, type DamagedCropOutput } from "@/ai/flows/damaged-crop-recovery";
+import { DamagedCropInputSchema } from "@/ai/schemas/damaged-crop-recovery";
 import { translateText } from "@/ai/flows/translator";
 
 const formSchema = DamagedCropInputSchema.extend({

@@ -9,27 +9,10 @@
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
 import { findAlternativeBuyersTool } from '../tools/find-alternative-buyers';
+import { DamagedCropInputSchema, DamagedCropOutputSchema, type DamagedCropInput, type DamagedCropOutput } from '../schemas/damaged-crop-recovery';
 
-export const DamagedCropInputSchema = z.object({
-  cropName: z.string().describe('The name of the crop.'),
-  cropStage: z.enum(['Seedling', 'Vegetative', 'Flowering', 'Harvest']).describe('The current growth stage of the crop.'),
-  damageType: z.array(z.enum(['Heavy Rain', 'Drought', 'Pest Attack', 'Disease', 'Hailstorm', 'Other'])).describe('The type(s) of damage sustained by the crop.'),
-  damageExtent: z.enum(['<25%', '25-50%', '50-75%', '>75%']).describe('The estimated extent of the damage.'),
-  location: z.string().describe('The location of the farm to find nearby buyers.'),
-});
-export type DamagedCropInput = z.infer<typeof DamagedCropInputSchema>;
-
-export const DamagedCropOutputSchema = z.object({
-    salvagingMethods: z.array(z.string()).describe('A list of suggested methods to salvage the damaged crop.'),
-    alternativeBuyers: z.array(z.object({
-        name: z.string().describe("The name of the buyer or company."),
-        contact: z.string().describe("The contact number of the buyer."),
-        buyerType: z.string().describe("The type of buyer (e.g., Poultry Feed Unit, Juice Factory, Ethanol Plant)."),
-    })).describe('A list of potential nearby alternative buyers for the damaged crop.'),
-});
-export type DamagedCropOutput = z.infer<typeof DamagedCropOutputSchema>;
+export type { DamagedCropInput, DamagedCropOutput };
 
 export async function getDamagedCropAdvice(input: DamagedCropInput): Promise<DamagedCropOutput> {
   return damagedCropRecoveryFlow(input);
