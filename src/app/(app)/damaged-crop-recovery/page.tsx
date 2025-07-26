@@ -123,7 +123,7 @@ function ResultCard({
                                             <a href={`tel:${buyer.contact}`}><Phone className="mr-2" />{language === 'kn' ? 'ಕರೆ ಮಾಡಿ' : 'Call Buyer'}</a>
                                         </Button>
                                         <Button variant="secondary" className='flex-1' onClick={() => toast({ title: language === 'kn' ? 'ಶೀಘ್ರದಲ್ಲೇ ಬರಲಿದೆ!' : 'Coming Soon!', description: language === 'kn' ? 'ಈ ವೈಶಿಷ್ಟ್ಯವನ್ನು ಶೀಘ್ರದಲ್ಲೇ ಜಾರಿಗೆ ತರಲಾಗುವುದು.' : 'This feature will be implemented soon.'})}>
-                                            <ShoppingCart className="mr-2" />{language === 'kn' ? 'ಬಜಾರ್‌ನಲ್ಲಿ ಪೋಸ್ಟ್ ಮಾಡಿ' : 'Post in Bazar'}
+                                            <ShoppingCart className="mr-2" />{language === 'kn' ? 'ಜಾಹೀರಾತು ಪೋಸ್ಟ್ ಮಾಡಿ' : 'Post Ad'}
                                         </Button>
                                     </CardFooter>
                                 </Card>
