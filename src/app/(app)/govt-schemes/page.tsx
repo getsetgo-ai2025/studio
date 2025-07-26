@@ -25,18 +25,20 @@ import {
 } from "@/components/ui/accordion";
 import { AlertCircle, Loader2, Mic, Volume2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/hooks/use-language";
 
 function SubmitButton() {
   const { pending: isPending } = useFormStatus();
+  const { language } = useLanguage();
   return (
     <Button type="submit" className="w-full" disabled={isPending}>
       {isPending ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          Finding Schemes...
+          {language === 'kn' ? 'ಯೋಜನೆಗಳನ್ನು ಹುಡುಕಲಾಗುತ್ತಿದೆ...' : 'Finding Schemes...'}
         </>
       ) : (
-        "Find Schemes"
+        language === 'kn' ? 'ಯೋಜನೆಗಳನ್ನು ಹುಡುಕಿ' : 'Find Schemes'
       )}
     </Button>
   );
@@ -51,9 +53,15 @@ function ResultCard({
   error: string | null;
   pending: boolean;
 }) {
+  const { language } = useLanguage();
   const handleSpeak = (text: string) => {
     if ("speechSynthesis" in window) {
       const utterance = new SpeechSynthesisUtterance(text);
+      const voices = window.speechSynthesis.getVoices();
+      const kannadaVoice = voices.find(voice => voice.lang.startsWith('kn'));
+      if (kannadaVoice && language === 'kn') {
+        utterance.voice = kannadaVoice;
+      }
       window.speechSynthesis.speak(utterance);
     } else {
       alert("Text-to-speech is not supported in your browser.");
@@ -78,7 +86,7 @@ function ResultCard({
     return (
       <Alert variant="destructive">
         <AlertCircle className="h-4 w-4" />
-        <AlertTitle>Failed to find schemes</AlertTitle>
+        <AlertTitle>{language === 'kn' ? 'ಯೋಜನೆಗಳನ್ನು ಹುಡುಕಲು ವಿಫಲವಾಗಿದೆ' : 'Failed to find schemes'}</AlertTitle>
         <AlertDescription>{error}</AlertDescription>
       </Alert>
     );
@@ -89,7 +97,7 @@ function ResultCard({
   const fullText = data.schemes
     .map(
       (scheme: any) =>
-        `Scheme: ${scheme.name}. Description: ${scheme.description}. Eligibility: ${scheme.eligibilityCriteria}. Benefits: ${scheme.benefits}. How to apply: ${scheme.howToApply}.`
+        `${language === 'kn' ? 'ಯೋಜನೆ:' : 'Scheme:'} ${scheme.name}. ${language === 'kn' ? 'ವಿವರಣೆ:' : 'Description:'} ${scheme.description}. ${language === 'kn' ? 'ಅರ್ಹತೆ:' : 'Eligibility:'} ${scheme.eligibilityCriteria}. ${language === 'kn' ? 'ಪ್ರಯೋಜನಗಳು:' : 'Benefits:'} ${scheme.benefits}. ${language === 'kn' ? 'ಅನ್ವಯಿಸುವುದು ಹೇಗೆ:' : 'How to apply:'} ${scheme.howToApply}.`
     )
     .join(" ");
 
@@ -98,9 +106,9 @@ function ResultCard({
       <CardHeader>
         <div className="flex justify-between items-start">
           <div>
-            <CardTitle>Relevant Government Schemes</CardTitle>
+            <CardTitle>{language === 'kn' ? 'ಸಂಬಂಧಿತ ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು' : 'Relevant Government Schemes'}</CardTitle>
             <CardDescription>
-              Based on your situation, you may be eligible for these schemes.
+              {language === 'kn' ? 'ನಿಮ್ಮ ಪರಿಸ್ಥಿತಿಯ ಆಧಾರದ ಮೇಲೆ, ನೀವು ಈ ಯೋಜನೆಗಳಿಗೆ ಅರ್ಹರಾಗಿರಬಹುದು.' : 'Based on your situation, you may be eligible for these schemes.'}
             </CardDescription>
           </div>
           <Button
@@ -124,7 +132,7 @@ function ResultCard({
                 <p className="text-muted-foreground">{scheme.description}</p>
                 <div className="space-y-2">
                   <h4 className="font-semibold text-accent-foreground">
-                    Eligibility Criteria
+                    {language === 'kn' ? 'ಅರ್ಹತಾ ಮಾನದಂಡ' : 'Eligibility Criteria'}
                   </h4>
                   <p className="text-sm text-muted-foreground">
                     {scheme.eligibilityCriteria}
@@ -132,7 +140,7 @@ function ResultCard({
                 </div>
                 <div className="space-y-2">
                   <h4 className="font-semibold text-accent-foreground">
-                    Benefits
+                    {language === 'kn' ? 'ಪ್ರಯೋಜನಗಳು' : 'Benefits'}
                   </h4>
                   <p className="text-sm text-muted-foreground">
                     {scheme.benefits}
@@ -140,7 +148,7 @@ function ResultCard({
                 </div>
                 <div className="space-y-2">
                   <h4 className="font-semibold text-accent-foreground">
-                    How to Apply
+                    {language === 'kn' ? 'ಅನ್ವಯಿಸುವುದು ಹೇಗೆ' : 'How to Apply'}
                   </h4>
                   <p className="text-sm text-muted-foreground">
                     {scheme.howToApply}
@@ -157,6 +165,7 @@ function ResultCard({
 
 export default function GovtSchemesPage() {
   const { toast } = useToast();
+  const { language } = useLanguage();
   const [state, formAction] = useActionState(getSchemes, {
     data: null,
     error: null,
@@ -182,20 +191,23 @@ export default function GovtSchemesPage() {
       <Card>
         <CardHeader>
           <CardTitle className="font-headline">
-            Government Scheme Finder
+            {language === 'kn' ? 'ಸರ್ಕಾರಿ ಯೋಜನೆ ಹುಡುಕಾಟ' : 'Government Scheme Finder'}
           </CardTitle>
           <CardDescription>
-            Enter your details to find relevant government schemes.
+            {language === 'kn' ? 'ಸಂಬಂಧಿತ ಸರ್ಕಾರಿ ಯೋಜನೆಗಳನ್ನು ಹುಡುಕಲು ನಿಮ್ಮ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ.' : 'Enter your details to find relevant government schemes.'}
           </CardDescription>
         </CardHeader>
-        <form ref={formRef} action={formAction}>
+        <form ref={formRef} action={(formData) => {
+            formData.append('language', language);
+            formAction(formData);
+        }}>
           <CardContent className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="location">Location</Label>
+              <Label htmlFor="location">{language === 'kn' ? 'ಸ್ಥಳ' : 'Location'}</Label>
               <Input
                 id="location"
                 name="location"
-                placeholder="e.g., 'Karnataka'"
+                placeholder={language === 'kn' ? "ಉದಾಹರಣೆಗೆ, 'ಕರ್ನಾಟಕ'" : "e.g., 'Karnataka'"}
                 required
               />
               {state.formErrors?.location && (
@@ -205,12 +217,12 @@ export default function GovtSchemesPage() {
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="landParcel">Land Parcel (in acres)</Label>
+              <Label htmlFor="landParcel">{language === 'kn' ? 'ಭೂಮಿ (ಎಕರೆಗಳಲ್ಲಿ)' : 'Land Parcel (in acres)'}</Label>
               <Input
                 id="landParcel"
                 name="landParcel"
                 type="number"
-                placeholder="e.g., '2'"
+                placeholder={language === 'kn' ? "ಉದಾಹರಣೆಗೆ, '2'" : "e.g., '2'"}
                 required
                 step="0.1"
               />
@@ -221,11 +233,11 @@ export default function GovtSchemesPage() {
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="cropName">Crop Name</Label>
+              <Label htmlFor="cropName">{language === 'kn' ? 'ಬೆಳೆ ಹೆಸರು' : 'Crop Name'}</Label>
               <Input
                 id="cropName"
                 name="cropName"
-                placeholder="e.g., 'Ragi'"
+                placeholder={language === 'kn' ? "ಉದಾಹರಣೆಗೆ, 'ರಾಗಿ'" : "e.g., 'Ragi'"}
                 required
               />
               {state.formErrors?.cropName && (
@@ -235,12 +247,12 @@ export default function GovtSchemesPage() {
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="subsidiesFor">Subsidies for</Label>
+              <Label htmlFor="subsidiesFor">{language === 'kn' ? 'ಸಬ್ಸಿಡಿಗಳು' : 'Subsidies for'}</Label>
               <div className="relative">
                 <Textarea
                   id="subsidiesFor"
                   name="subsidiesFor"
-                  placeholder="e.g., 'Irrigation equipment, seeds, and fertilizers'"
+                  placeholder={language === 'kn' ? "ಉದಾಹರಣೆಗೆ, 'ನೀರಾವರಿ ಉಪಕರಣಗಳು, ಬೀಜಗಳು ಮತ್ತು ರಸಗೊಬ್ಬರಗಳು'" : "e.g., 'Irrigation equipment, seeds, and fertilizers'"}
                   rows={1}
                   required
                   className="pr-10"

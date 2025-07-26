@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 import { getCropHealthAdvice, type CropHealthAdviceOutput } from "@/ai/flows/crop-health-advice";
+import { translateText } from "@/ai/flows/translator";
 
 const formSchema = z.object({
   description: z.string().min(10, "Please provide a more detailed description."),
@@ -9,6 +10,7 @@ const formSchema = z.object({
     .any()
     .refine((file) => file?.size > 0, "An image of the crop is required.")
     .refine((file) => file?.type.startsWith("image/"), "Only image files are accepted."),
+  language: z.enum(['en', 'kn']),
 });
 
 type State = {
@@ -27,6 +29,7 @@ export async function getAdvice(
   const validatedFields = formSchema.safeParse({
     description: formData.get("description"),
     image: formData.get("image"),
+    language: formData.get("language"),
   });
 
   if (!validatedFields.success) {
@@ -37,7 +40,7 @@ export async function getAdvice(
     };
   }
 
-  const { description, image: file } = validatedFields.data;
+  const { description, image: file, language } = validatedFields.data;
 
   try {
     const bytes = await file.arrayBuffer();
@@ -48,6 +51,20 @@ export async function getAdvice(
       description,
       photoDataUri,
     });
+
+    if (language === 'kn') {
+        const [translatedDiagnosis, translatedTreatmentPlan] = await Promise.all([
+            translateText({ text: result.diagnosis, targetLanguage: 'kn' }),
+            translateText({ text: result.treatmentPlan, targetLanguage: 'kn' })
+        ]);
+        return { 
+            data: { 
+                diagnosis: translatedDiagnosis.translatedText, 
+                treatmentPlan: translatedTreatmentPlan.translatedText 
+            }, 
+            error: null 
+        };
+    }
 
     return { data: result, error: null };
   } catch (e) {

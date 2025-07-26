@@ -16,6 +16,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem
 } from "@/components/ui/dropdown-menu";
 import {
   SidebarProvider,
@@ -36,28 +38,53 @@ import {
   Stethoscope,
   Tractor,
   User,
+  Languages,
 } from "lucide-react";
+import { LanguageProvider, useLanguage } from "@/hooks/use-language";
+
 
 const navItems = [
   {
     href: "/doctor-agro",
     icon: Stethoscope,
-    label: "Doctor Agro",
-    tooltip: "Crop Health Advisor",
+    label: { en: "Doctor Agro", kn: "ಡಾಕ್ಟರ್ ಆಗ್ರೋ" },
+    tooltip: { en: "Crop Health Advisor", kn: "ಬೆಳೆ ಆರೋಗ್ಯ ಸಲಹೆಗಾರ" },
   },
   {
     href: "/market-analysis",
     icon: LineChart,
-    label: "Market Analysis",
-    tooltip: "Market Insights",
+    label: { en: "Market Analysis", kn: "ಮಾರುಕಟ್ಟೆ ವಿಶ್ಲೇಷಣೆ" },
+    tooltip: { en: "Market Insights", kn: "ಮಾರುಕಟ್ಟೆ ಒಳನೋಟಗಳು" },
   },
   {
     href: "/govt-schemes",
     icon: Landmark,
-    label: "Govt Schemes",
-    tooltip: "Government Schemes",
+    label: { en: "Govt Schemes", kn: "ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು" },
+    tooltip: { en: "Government Schemes", kn: "ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು" },
   },
 ];
+
+function LanguageSwitcher() {
+    const { language, setLanguage } = useLanguage();
+
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                    <Languages className="h-5 w-5" />
+                    <span className="sr-only">Change language</span>
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Select Language</DropdownMenuLabel>
+                <DropdownMenuRadioGroup value={language} onValueChange={(value) => setLanguage(value as 'en' | 'kn')}>
+                    <DropdownMenuRadioItem value="en">English</DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="kn">ಕನ್ನಡ (Kannada)</DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+        </DropdownMenu>
+    )
+}
 
 function AppHeader() {
   const { isMobile } = useSidebar();
@@ -65,6 +92,7 @@ function AppHeader() {
     <header className="flex h-14 items-center gap-4 border-b bg-card px-4 lg:h-[60px] lg:px-6">
       <SidebarTrigger className="md:hidden" />
       <div className="w-full flex-1" />
+      <LanguageSwitcher />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="secondary" size="icon" className="rounded-full">
@@ -95,12 +123,13 @@ function AppHeader() {
 
 function AppSidebar() {
   const pathname = usePathname();
+  const { language } = useLanguage();
   return (
     <Sidebar>
       <SidebarHeader>
         <div className="flex items-center gap-2 p-2">
           <Tractor className="h-8 w-8 text-primary" />
-          <h1 className="text-xl font-headline font-bold">Raita Sahayak</h1>
+          <h1 className="text-xl font-headline font-bold">{language === 'kn' ? 'ರೈತ ಸಹಾಯಕ' : 'Raita Sahayak'}</h1>
         </div>
       </SidebarHeader>
       <SidebarContent>
@@ -110,11 +139,11 @@ function AppSidebar() {
               <SidebarMenuButton
                 asChild
                 isActive={pathname === item.href}
-                tooltip={{ children: item.tooltip, side: "right", align: "center" }}
+                tooltip={{ children: item.tooltip[language], side: "right", align: "center" }}
               >
                 <Link href={item.href}>
                   <item.icon />
-                  <span>{item.label}</span>
+                  <span>{item.label[language]}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -125,8 +154,8 @@ function AppSidebar() {
   );
 }
 
-export default function AppLayout({ children }: { children: React.ReactNode }) {
-  return (
+function AppLayoutContent({ children }: { children: React.ReactNode }) {
+    return (
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
@@ -138,5 +167,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
       </SidebarInset>
     </SidebarProvider>
+    )
+}
+
+
+export default function AppLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <LanguageProvider>
+        <AppLayoutContent>{children}</AppLayoutContent>
+    </LanguageProvider>
   );
 }

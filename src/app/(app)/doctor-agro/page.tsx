@@ -20,18 +20,20 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Camera, AlertCircle, Loader2, Mic, Volume2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/hooks/use-language";
 
 function SubmitButton() {
   const { pending: isPending } = useFormStatus();
+  const { language } = useLanguage();
   return (
     <Button type="submit" className="w-full" disabled={isPending}>
       {isPending ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          Analyzing...
+          {language === 'kn' ? 'ವಿಶ್ಲೇಷಿಸಲಾಗುತ್ತಿದೆ...' : 'Analyzing...'}
         </>
       ) : (
-        "Get Advice"
+        language === 'kn' ? 'ಸಲಹೆ ಪಡೆಯಿರಿ' : 'Get Advice'
       )}
     </Button>
   );
@@ -46,9 +48,16 @@ function ResultCard({
   error: string | null;
   pending: boolean;
 }) {
+  const { language } = useLanguage();
   const handleSpeak = (text: string) => {
     if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(text);
+      // Attempt to find a Kannada voice
+      const voices = window.speechSynthesis.getVoices();
+      const kannadaVoice = voices.find(voice => voice.lang.startsWith('kn'));
+      if (kannadaVoice && language === 'kn') {
+        utterance.voice = kannadaVoice;
+      }
       window.speechSynthesis.speak(utterance);
     } else {
       alert('Text-to-speech is not supported in your browser.');
@@ -74,7 +83,7 @@ function ResultCard({
     return (
       <Alert variant="destructive">
         <AlertCircle className="h-4 w-4" />
-        <AlertTitle>Analysis Failed</AlertTitle>
+        <AlertTitle>{language === 'kn' ? 'ವಿಶ್ಲೇಷಣೆ ವಿಫಲವಾಗಿದೆ' : 'Analysis Failed'}</AlertTitle>
         <AlertDescription>{error}</AlertDescription>
       </Alert>
     );
@@ -82,16 +91,16 @@ function ResultCard({
 
   if (!data) return null;
 
-  const fullText = `Diagnosis: ${data.diagnosis}. Treatment Plan: ${data.treatmentPlan}`;
+  const fullText = `${language === 'kn' ? 'ರೋಗನಿರ್ಣಯ:' : 'Diagnosis:'} ${data.diagnosis}. ${language === 'kn' ? 'ಚಿಕಿತ್ಸಾ ಯೋಜನೆ:' : 'Treatment Plan:'} ${data.treatmentPlan}`;
 
   return (
     <Card>
       <CardHeader>
         <div className="flex justify-between items-start">
             <div>
-                <CardTitle>Analysis Result</CardTitle>
+                <CardTitle>{language === 'kn' ? 'ವಿಶ್ಲೇಷಣೆ ಫಲಿತಾಂಶ' : 'Analysis Result'}</CardTitle>
                 <CardDescription>
-                Based on the information provided.
+                {language === 'kn' ? 'ಒದಗಿಸಿದ ಮಾಹಿತಿಯ ಆಧಾರದ ಮೇಲೆ.' : 'Based on the information provided.'}
                 </CardDescription>
             </div>
             <Button variant="ghost" size="icon" onClick={() => handleSpeak(fullText)}>
@@ -102,11 +111,11 @@ function ResultCard({
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <h3 className="font-semibold text-lg text-primary">Diagnosis</h3>
+          <h3 className="font-semibold text-lg text-primary">{language === 'kn' ? 'ರೋಗನಿರ್ಣಯ' : 'Diagnosis'}</h3>
           <p className="text-muted-foreground">{data.diagnosis}</p>
         </div>
         <div>
-          <h3 className="font-semibold text-lg text-primary">Treatment Plan</h3>
+          <h3 className="font-semibold text-lg text-primary">{language === 'kn' ? 'ಚಿಕಿತ್ಸಾ ಯೋಜನೆ' : 'Treatment Plan'}</h3>
           <p className="text-muted-foreground whitespace-pre-wrap">{data.treatmentPlan}</p>
         </div>
       </CardContent>
@@ -116,6 +125,7 @@ function ResultCard({
 
 export default function DoctorAgroPage() {
   const { toast } = useToast();
+  const { language } = useLanguage();
   const [state, formAction] = useActionState(getAdvice, {
     data: null,
     error: null,
@@ -156,20 +166,23 @@ export default function DoctorAgroPage() {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="font-headline">Crop Health Advisor</CardTitle>
+          <CardTitle className="font-headline">{language === 'kn' ? 'ಬೆಳೆ ಆರೋಗ್ಯ ಸಲಹೆಗಾರ' : 'Crop Health Advisor'}</CardTitle>
           <CardDescription>
-            Describe your crop's issue and upload a photo for an AI-powered diagnosis.
+            {language === 'kn' ? 'AI-ಚಾಲಿತ ರೋಗನಿರ್ಣಯಕ್ಕಾಗಿ ನಿಮ್ಮ ಬೆಳವಣಿಗೆಯ ಸಮಸ್ಯೆಯನ್ನು ವಿವರಿಸಿ ಮತ್ತು ಫೋಟೋವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ.' : 'Describe your crop\'s issue and upload a photo for an AI-powered diagnosis.'}
           </CardDescription>
         </CardHeader>
-        <form ref={formRef} action={formAction}>
+        <form ref={formRef} action={(formData) => {
+            formData.append('language', language);
+            formAction(formData);
+        }}>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="description">Symptom Description</Label>
+              <Label htmlFor="description">{language === 'kn' ? 'ರೋಗಲಕ್ಷಣಗಳ ವಿವರಣೆ' : 'Symptom Description'}</Label>
               <div className="relative">
                 <Textarea
                   id="description"
                   name="description"
-                  placeholder="e.g., 'My tomato plants have yellow spots on the leaves and the fruit is rotting.'"
+                  placeholder={language === 'kn' ? "ಉದಾಹರಣೆಗೆ, 'ನನ್ನ ಟೊಮೆಟೊ ಗಿಡಗಳ ಎಲೆಗಳ ಮೇಲೆ ಹಳದಿ ಚುಕ್ಕೆಗಳಿವೆ ಮತ್ತು ಹಣ್ಣು ಕೊಳೆಯುತ್ತಿದೆ.'" : "e.g., 'My tomato plants have yellow spots on the leaves and the fruit is rotting.'"}
                   rows={4}
                   required
                   className="pr-10"
@@ -184,7 +197,7 @@ export default function DoctorAgroPage() {
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="image">Upload Photo</Label>
+              <Label htmlFor="image">{language === 'kn' ? 'ಫೋಟೋ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ' : 'Upload Photo'}</Label>
                {imagePreview && (
                 <div className="mt-4 relative aspect-video w-full max-w-sm mx-auto">
                     <Image

@@ -19,18 +19,20 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlertCircle, Loader2, Mic, Volume2, Target, TrendingUp, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/hooks/use-language";
 
 function SubmitButton() {
   const { pending: isPending } = useFormStatus();
+  const { language } = useLanguage();
   return (
     <Button type="submit" className="w-full" disabled={isPending}>
       {isPending ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          Analyzing...
+          {language === 'kn' ? 'ವಿಶ್ಲೇಷಿಸಲಾಗುತ್ತಿದೆ...' : 'Analyzing...'}
         </>
       ) : (
-        "Get Market Analysis"
+        language === 'kn' ? 'ಮಾರುಕಟ್ಟೆ ವಿಶ್ಲೇಷಣೆ ಪಡೆಯಿರಿ' : 'Get Market Analysis'
       )}
     </Button>
   );
@@ -45,9 +47,15 @@ function ResultCard({
   error: string | null;
   pending: boolean;
 }) {
+  const { language } = useLanguage();
   const handleSpeak = (text: string) => {
     if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(text);
+      const voices = window.speechSynthesis.getVoices();
+      const kannadaVoice = voices.find(voice => voice.lang.startsWith('kn'));
+      if (kannadaVoice && language === 'kn') {
+        utterance.voice = kannadaVoice;
+      }
       window.speechSynthesis.speak(utterance);
     } else {
       alert('Text-to-speech is not supported in your browser.');
@@ -73,7 +81,7 @@ function ResultCard({
     return (
       <Alert variant="destructive">
         <AlertCircle className="h-4 w-4" />
-        <AlertTitle>Analysis Failed</AlertTitle>
+        <AlertTitle>{language === 'kn' ? 'ವಿಶ್ಲೇಷಣೆ ವಿಫಲವಾಗಿದೆ' : 'Analysis Failed'}</AlertTitle>
         <AlertDescription>{error}</AlertDescription>
       </Alert>
     );
@@ -82,10 +90,10 @@ function ResultCard({
   if (!data) return null;
   
   const fullText = `
-    Predictive Value Per Ton: ${data.predictiveValuePerTon}.
-    Maximum Consumption Area: ${data.maximumConsumption}.
-    Most Effective Consumer: ${data.effectiveConsumer}.
-    Market Overview: ${data.marketOverview}
+    ${language === 'kn' ? 'ಪ್ರತಿ ಟನ್‌ಗೆ ಊಹಿಸಿದ ಮೌಲ್ಯ:' : 'Predictive Value Per Ton:'} ${data.predictiveValuePerTon}.
+    ${language === 'kn' ? 'ಗರಿಷ್ಠ ಬಳಕೆ ಪ್ರದೇಶ:' : 'Maximum Consumption Area:'} ${data.maximumConsumption}.
+    ${language === 'kn' ? 'ಅತ್ಯಂತ ಪರಿಣಾಮಕಾರಿ ಗ್ರಾಹಕ:' : 'Most Effective Consumer:'} ${data.effectiveConsumer}.
+    ${language === 'kn' ? 'ಮಾರುಕಟ್ಟೆ ಅವಲೋಕನ:' : 'Market Overview:'} ${data.marketOverview}
   `;
 
   return (
@@ -93,9 +101,9 @@ function ResultCard({
       <CardHeader>
         <div className="flex justify-between items-start">
           <div>
-            <CardTitle>Market Analysis</CardTitle>
+            <CardTitle>{language === 'kn' ? 'ಮಾರುಕಟ್ಟೆ ವಿಶ್ಲೇಷಣೆ' : 'Market Analysis'}</CardTitle>
             <CardDescription>
-              Detailed insights based on your query.
+              {language === 'kn' ? 'ನಿಮ್ಮ ಪ್ರಶ್ನೆಯ ಆಧಾರದ ಮೇಲೆ ವಿವರವಾದ ಒಳನೋಟಗಳು.' : 'Detailed insights based on your query.'}
             </CardDescription>
           </div>
           <Button variant="ghost" size="icon" onClick={() => handleSpeak(fullText)}>
@@ -108,7 +116,7 @@ function ResultCard({
          <div className="grid gap-4 md:grid-cols-3">
              <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Predictive Value / Ton</CardTitle>
+                    <CardTitle className="text-sm font-medium">{language === 'kn' ? 'ಊಹಿಸಿದ ಮೌಲ್ಯ / ಟನ್' : 'Predictive Value / Ton'}</CardTitle>
                     <TrendingUp className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
@@ -117,7 +125,7 @@ function ResultCard({
              </Card>
              <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Max Consumption Area</CardTitle>
+                    <CardTitle className="text-sm font-medium">{language === 'kn' ? 'ಗರಿಷ್ಠ ಬಳಕೆ ಪ್ರದೇಶ' : 'Max Consumption Area'}</CardTitle>
                     <Users className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
@@ -126,7 +134,7 @@ function ResultCard({
              </Card>
              <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Most Effective Consumer</CardTitle>
+                    <CardTitle className="text-sm font-medium">{language === 'kn' ? 'ಅತ್ಯಂತ ಪರಿಣಾಮಕಾರಿ ಗ್ರಾಹಕ' : 'Most Effective Consumer'}</CardTitle>
                     <Target className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
@@ -136,7 +144,7 @@ function ResultCard({
         </div>
 
         <div>
-          <h3 className="font-semibold text-lg text-primary mb-2">Market Overview</h3>
+          <h3 className="font-semibold text-lg text-primary mb-2">{language === 'kn' ? 'ಮಾರುಕಟ್ಟೆ ಅವಲೋಕನ' : 'Market Overview'}</h3>
           <p className="text-muted-foreground whitespace-pre-wrap">{data.marketOverview}</p>
         </div>
       </CardContent>
@@ -146,6 +154,7 @@ function ResultCard({
 
 export default function MarketAnalysisPage() {
   const { toast } = useToast();
+  const { language } = useLanguage();
   const [state, formAction] = useActionState(getAnalysis, {
     data: null,
     error: null,
@@ -170,19 +179,22 @@ export default function MarketAnalysisPage() {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="font-headline">Market Analysis</CardTitle>
+          <CardTitle className="font-headline">{language === 'kn' ? 'ಮಾರುಕಟ್ಟೆ ವಿಶ್ಲೇಷಣೆ' : 'Market Analysis'}</CardTitle>
           <CardDescription>
-            Enter a crop name and location to get an AI-powered market overview.
+            {language === 'kn' ? 'AI-ಚಾಲಿತ ಮಾರುಕಟ್ಟೆ ಅವಲೋಕನವನ್ನು ಪಡೆಯಲು ಬೆಳೆ ಹೆಸರು ಮತ್ತು ಸ್ಥಳವನ್ನು ನಮೂದಿಸಿ.' : 'Enter a crop name and location to get an AI-powered market overview.'}
           </CardDescription>
         </CardHeader>
-        <form ref={formRef} action={formAction}>
+        <form ref={formRef} action={(formData) => {
+            formData.append('language', language);
+            formAction(formData);
+        }}>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="location">Location</Label>
+              <Label htmlFor="location">{language === 'kn' ? 'ಸ್ಥಳ' : 'Location'}</Label>
               <Input
                 id="location"
                 name="location"
-                placeholder="e.g., 'Karnataka', 'Maharashtra'"
+                placeholder={language === 'kn' ? "ಉದಾಹರಣೆಗೆ, 'ಕರ್ನಾಟಕ', 'ಮಹಾರಾಷ್ಟ್ರ'" : "e.g., 'Karnataka', 'Maharashtra'"}
                 required
               />
               {state.formErrors?.location && (
@@ -190,12 +202,12 @@ export default function MarketAnalysisPage() {
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="cropDescription">Crop Name or Description</Label>
+              <Label htmlFor="cropDescription">{language === 'kn' ? 'ಬೆಳೆ ಹೆಸರು ಅಥವಾ ವಿವರಣೆ' : 'Crop Name or Description'}</Label>
                <div className="relative">
                 <Textarea
                   id="cropDescription"
                   name="cropDescription"
-                  placeholder="e.g., 'Basmati Rice', 'Organic Mangoes'"
+                  placeholder={language === 'kn' ? "ಉದಾಹರಣೆಗೆ, 'ಬಾಸಮತಿ ಅಕ್ಕಿ', 'ಸಾವಯವ ಮಾವು'" : "e.g., 'Basmati Rice', 'Organic Mangoes'"}
                   rows={2}
                   required
                   className="pr-10"
