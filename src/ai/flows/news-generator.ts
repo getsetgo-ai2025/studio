@@ -15,7 +15,7 @@ import { translateText } from './translator';
 
 const NewsArticleSchema = z.object({
     title: z.string().describe("The headline of the news article."),
-    date: z.string().describe("The publication date of the article in a human-readable format (e.g., 'October 27, 2023')."),
+    date: z.string().describe("The publication date of the article in a human-readable format (e.g., 'January 15, 2025')."),
     summary: z.string().describe("A brief summary of the news article."),
     language: z.enum(['en', 'kn']).describe("The language of the generated news article.")
 });
@@ -65,7 +65,7 @@ const prompt = ai.definePrompt({
 
   Your task is to generate a list of 3 recent, realistic-sounding news articles relevant to farmers in Karnataka, India. The news should cover topics like new government schemes, technological advancements in agriculture, market price updates for local crops, or weather advisories.
 
-  Ensure the publication dates are very recent, from the current year.
+  Ensure the publication dates are from the year 2025.
   
   The articles should be in English, they will be translated later if needed.`,
 });
