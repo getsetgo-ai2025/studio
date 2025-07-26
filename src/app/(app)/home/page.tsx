@@ -10,9 +10,9 @@ import { getRecentNews, type NewsArticle } from "@/ai/flows/news-generator";
 import { useEffect, useState } from "react";
 
 const slideshowImages = [
-    { src: "https://placehold.co/800x400.png", alt: { en: "Farmer using a drone", kn: "ಡ್ರೋನ್ ಬಳಸುತ್ತಿರುವ ರೈತ" }, hint: "drone farming" },
-    { src: "https://placehold.co/800x400.png", alt: { en: "Smart farm with sensors", kn: "ಸಂವೇದಕಗಳೊಂದಿಗೆ ಸ್ಮಾರ್ಟ್ ಫಾರ್ಮ್" }, hint: "agriculture technology" },
-    { src: "https://placehold.co/800x400.png", alt: { en: "Automated irrigation system", kn: "ಸ್ವಯಂಚಾಲಿತ ನೀರಾವರಿ ವ್ಯವಸ್ಥೆ" }, hint: "smart irrigation" },
+    { src: "https://placehold.co/800x400.png", alt: { en: "Farmer using a drone", kn: "ಡ್ರೋನ್ ಬಳಸುತ್ತಿರುವ ರೈತ" }, hint: "drone agriculture" },
+    { src: "https://placehold.co/800x400.png", alt: { en: "Smart farm with sensors", kn: "ಸಂವೇದಕಗಳೊಂದಿಗೆ ಸ್ಮಾರ್ಟ್ ಫಾರ್ಮ್" }, hint: "smart farm" },
+    { src: "https://placehold.co/800x400.png", alt: { en: "Automated irrigation system", kn: "ಸ್ವಯಂಚಾಲಿತ ನೀರಾವರಿ ವ್ಯವಸ್ಥೆ" }, hint: "irrigation system" },
     { src: "https://placehold.co/800x400.png", alt: { en: "Farmer with a tablet", kn: "ಟ್ಯಾಬ್ಲೆಟ್ ಹಿಡಿದ ರೈತ" }, hint: "farmer tablet" },
 ];
 
