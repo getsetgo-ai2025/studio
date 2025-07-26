@@ -16,13 +16,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
-import { AlertCircle, Loader2, Phone, ShoppingCart, Recycle, ThumbsUp, Users } from 'lucide-react';
+import { AlertCircle, Info, Loader2, Phone, ShoppingCart, Recycle, ThumbsUp, Users } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/hooks/use-language';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { type DamagedCropOutput } from '@/ai/flows/damaged-crop-recovery';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 const damageTypes = [
     { id: 'Heavy Rain', label: { en: 'Heavy Rain', kn: 'ಭಾರೀ ಮಳೆ' } },
@@ -167,6 +168,16 @@ export default function DamagedCropRecoveryPage() {
         <CardHeader>
           <CardTitle className="font-headline flex items-center gap-2">
             <Recycle /> {language === 'kn' ? 'ಹಾನಿಗೊಳಗಾದ ಬೆಳೆ ಚೇತರಿಕೆ' : 'Damaged Crop Recovery'}
+             <Tooltip>
+                <TooltipTrigger asChild>
+                    <button>
+                        <Info className="h-4 w-4 text-muted-foreground" />
+                    </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                    <p>{language === 'kn' ? 'ಹಾನಿಗೊಳಗಾದ ಬೆಳೆಯನ್ನು ಪಾರುಗಾಣಿಕಾ ಮಾಡಲು ಮತ್ತು ಪರ್ಯಾಯ ಮಾರುಕಟ್ಟೆಗಳನ್ನು ಹುಡುಕಲು ಸಹಾಯ.' : 'Get help salvaging damaged crops and finding alternative markets.'}</p>
+                </TooltipContent>
+            </Tooltip>
           </CardTitle>
           <CardDescription>
             {language === 'kn' ? 'ನಿಮ್ಮ ಹಾನಿಗೊಳಗಾದ ಬೆಳೆಗೆ ಪಾರುಗಾಣಿಕಾ ವಿಧಾನಗಳು ಮತ್ತು ಪರ್ಯಾಯ ಮಾರುಕಟ್ಟೆಗಳನ್ನು ಹುಡುಕಲು ಈ ಫಾರ್ಮ್ ಅನ್ನು ಭರ್ತಿ ಮಾಡಿ.' : 'Fill this form to find salvaging methods and alternative markets for your damaged crop.'}

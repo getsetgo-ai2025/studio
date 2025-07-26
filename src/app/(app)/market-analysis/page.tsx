@@ -17,10 +17,11 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AlertCircle, LineChart, Loader2, Mic, MicOff, Volume2, Target, TrendingUp, Users } from "lucide-react";
+import { AlertCircle, LineChart, Loader2, Mic, MicOff, Volume2, Target, TrendingUp, Users, Info } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/hooks/use-language";
 import { useSpeechRecognition } from "@/hooks/use-speech-recognition";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 function SubmitButton() {
   const { pending: isPending } = useFormStatus();
@@ -204,6 +205,16 @@ export default function MarketAnalysisPage() {
         <CardHeader>
           <CardTitle className="font-headline flex items-center gap-2">
             <LineChart /> {language === 'kn' ? 'ಮಾರುಕಟ್ಟೆ ವಿಶ್ಲೇಷಣೆ' : 'Market Analysis'}
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <button>
+                        <Info className="h-4 w-4 text-muted-foreground" />
+                    </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                    <p>{language === 'kn' ? 'ಬೆಳೆಗಳಿಗೆ ಮಾರುಕಟ್ಟೆ ಬೆಲೆಗಳು ಮತ್ತು ಪ್ರವೃತ್ತಿಗಳನ್ನು ಪಡೆಯಿರಿ.' : 'Get market prices and trends for crops.'}</p>
+                </TooltipContent>
+            </Tooltip>
           </CardTitle>
           <CardDescription>
             {language === 'kn' ? 'AI-ಚಾಲಿತ ಮಾರುಕಟ್ಟೆ ಅವಲೋಕನವನ್ನು ಪಡೆಯಲು ಬೆಳೆ ಹೆಸರು ಮತ್ತು ಸ್ಥಳವನ್ನು ನಮೂದಿಸಿ.' : 'Enter a crop name and location to get an AI-powered market overview.'}

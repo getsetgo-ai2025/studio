@@ -23,10 +23,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { AlertCircle, Landmark, Loader2, Mic, MicOff, Volume2 } from "lucide-react";
+import { AlertCircle, Landmark, Loader2, Mic, MicOff, Volume2, Info } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/hooks/use-language";
 import { useSpeechRecognition } from "@/hooks/use-speech-recognition";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 
 function SubmitButton() {
@@ -217,6 +218,16 @@ export default function GovtSchemesPage() {
         <CardHeader>
           <CardTitle className="font-headline flex items-center gap-2">
             <Landmark /> {language === 'kn' ? 'ಸರ್ಕಾರಿ ಯೋಜನೆ ಹುಡುಕಾಟ' : 'Government Scheme Finder'}
+             <Tooltip>
+                <TooltipTrigger asChild>
+                    <button>
+                        <Info className="h-4 w-4 text-muted-foreground" />
+                    </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                    <p>{language === 'kn' ? 'ನಿಮ್ಮ ಅರ್ಹತೆಗೆ ಸರಿಹೊಂದುವ ಸರ್ಕಾರಿ ಯೋಜನೆಗಳನ್ನು ಹುಡುಕಿ.' : 'Find government schemes that match your eligibility.'}</p>
+                </TooltipContent>
+            </Tooltip>
           </CardTitle>
           <CardDescription>
             {language === 'kn' ? 'ಸಂಬಂಧಿತ ಸರ್ಕಾರಿ ಯೋಜನೆಗಳನ್ನು ಹುಡುಕಲು ನಿಮ್ಮ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ.' : 'Enter your details to find relevant government schemes.'}

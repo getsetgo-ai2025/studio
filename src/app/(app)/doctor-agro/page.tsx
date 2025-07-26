@@ -18,11 +18,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Camera, AlertCircle, Loader2, Mic, Volume2, MicOff, CheckCircle2, HeartPulse, List, Store, Stethoscope } from "lucide-react";
+import { Camera, AlertCircle, Loader2, Mic, Volume2, MicOff, CheckCircle2, HeartPulse, List, Store, Stethoscope, Info } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/hooks/use-language";
 import { useSpeechRecognition } from "@/hooks/use-speech-recognition";
 import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 function SubmitButton() {
   const { pending: isPending } = useFormStatus();
@@ -236,6 +237,16 @@ export default function DoctorAgroPage() {
         <CardHeader>
           <CardTitle className="font-headline flex items-center gap-2">
             <Stethoscope /> {language === 'kn' ? 'ಬೆಳೆ ಆರೋಗ್ಯ ಸಲಹೆಗಾರ' : 'Crop Health Advisor'}
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <button>
+                        <Info className="h-4 w-4 text-muted-foreground" />
+                    </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                    <p>{language === 'kn' ? 'ಬೆಳೆ ರೋಗಗಳನ್ನು ಪತ್ತೆಹಚ್ಚಲು ಮತ್ತು ಚಿಕಿತ್ಸೆಗಳನ್ನು ಪಡೆಯಲು ಸಹಾಯ.' : 'Get help diagnosing crop diseases and finding treatments.'}</p>
+                </TooltipContent>
+            </Tooltip>
           </CardTitle>
           <CardDescription>
             {language === 'kn' ? 'AI-ಚಾಲಿತ ರೋಗನಿರ್ಣಯಕ್ಕಾಗಿ ನಿಮ್ಮ ಬೆಳವಣಿಗೆಯ ಸಮಸ್ಯೆಯನ್ನು ವಿವರಿಸಿ ಮತ್ತು ಫೋಟೋವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ.' : 'Describe your crop\'s issue and upload a photo for an AI-powered diagnosis.'}
