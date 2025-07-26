@@ -84,21 +84,9 @@ const navItems = [
     label: { en: "Crop Recovery", kn: "ಬೆಳೆ ಚೇತರಿಕೆ" },
     tooltip: { en: "Damaged Crop Recovery & Market Finder", kn: "ಹಾನಿಗೊಳಗಾದ ಬೆಳೆ ಚೇತರಿಕೆ ಮತ್ತು ಮಾರುಕಟ್ಟೆ ಶೋಧಕ" },
   },
-  {
-    href: "/contact",
-    icon: LifeBuoy,
-    label: { en: "Contact Us", kn: "ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ" },
-    tooltip: { en: "Contact Us", kn: "ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ" },
-  },
 ];
 
 const secondaryNavItems = [
-    {
-        href: "/support",
-        icon: LifeBuoy,
-        label: { en: "Support", kn: "ಬೆಂಬಲ" },
-        tooltip: { en: "Support / Call Us", kn: "ಬೆಂಬಲ / ನಮಗೆ ಕರೆ ಮಾಡಿ" },
-    },
     {
         href: "/about",
         icon: Info,
@@ -198,10 +186,17 @@ function UserMenu() {
 
 function AppHeader() {
   const { isMobile } = useSidebar();
+  const { language } = useLanguage();
   return (
     <header className="flex h-14 items-center gap-4 border-b bg-card px-4 lg:h-[60px] lg:px-6">
       <SidebarTrigger className="md:hidden" />
       <div className="w-full flex-1" />
+       <Button variant="ghost" asChild>
+            <Link href="/contact">
+                <LifeBuoy className="mr-2 h-5 w-5" />
+                <span>{language === 'kn' ? 'ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ' : 'Contact Us'}</span>
+            </Link>
+        </Button>
       <LanguageSwitcher />
       <UserMenu />
     </header>
