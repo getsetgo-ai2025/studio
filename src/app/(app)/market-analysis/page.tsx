@@ -17,7 +17,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AlertCircle, Loader2, Mic, Volume2 } from "lucide-react";
+import { AlertCircle, Loader2, Mic, Volume2, Target, TrendingUp, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 function SubmitButton() {
@@ -80,25 +80,65 @@ function ResultCard({
   }
 
   if (!data) return null;
+  
+  const fullText = `
+    Predictive Value Per Ton: ${data.predictiveValuePerTon}.
+    Maximum Consumption Area: ${data.maximumConsumption}.
+    Most Effective Consumer: ${data.effectiveConsumer}.
+    Market Overview: ${data.marketOverview}
+  `;
 
   return (
     <Card>
       <CardHeader>
         <div className="flex justify-between items-start">
           <div>
-            <CardTitle>Market Overview</CardTitle>
+            <CardTitle>Market Analysis</CardTitle>
             <CardDescription>
-              Current market analysis and pricing insights.
+              Detailed insights based on your query.
             </CardDescription>
           </div>
-          <Button variant="ghost" size="icon" onClick={() => handleSpeak(data.marketOverview)}>
+          <Button variant="ghost" size="icon" onClick={() => handleSpeak(fullText)}>
             <Volume2 className="h-5 w-5" />
             <span className="sr-only">Read aloud</span>
           </Button>
         </div>
       </CardHeader>
-      <CardContent>
-        <p className="text-muted-foreground whitespace-pre-wrap">{data.marketOverview}</p>
+      <CardContent className="space-y-6">
+         <div className="grid gap-4 md:grid-cols-3">
+             <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Predictive Value / Ton</CardTitle>
+                    <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                    <div className="text-2xl font-bold">₹{data.predictiveValuePerTon.toLocaleString()}</div>
+                </CardContent>
+             </Card>
+             <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Max Consumption Area</CardTitle>
+                    <Users className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                    <p className="text-lg font-semibold">{data.maximumConsumption}</p>
+                </CardContent>
+             </Card>
+             <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Most Effective Consumer</CardTitle>
+                    <Target className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                     <p className="text-lg font-semibold">{data.effectiveConsumer}</p>
+                </CardContent>
+             </Card>
+        </div>
+
+        <div>
+          <h3 className="font-semibold text-lg text-primary mb-2">Market Overview</h3>
+          <p className="text-muted-foreground whitespace-pre-wrap">{data.marketOverview}</p>
+        </div>
       </CardContent>
     </Card>
   );
