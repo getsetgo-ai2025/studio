@@ -41,6 +41,8 @@ import {
   Languages,
   Recycle,
   Loader2,
+  LogIn,
+  UserPlus,
 } from "lucide-react";
 import { useLanguage } from "@/hooks/use-language";
 import { useAuth } from "@/hooks/use-auth";
@@ -105,16 +107,33 @@ function UserMenu() {
 
     if (error) {
         console.error("Auth error:", error);
-        // Optionally redirect to login if auth state is erroneous
-        router.push('/login');
-        return null;
     }
     
     if (!user) {
-        // This should theoretically not be reached due to the layout's auth check,
-        // but as a fallback, we can redirect.
-        router.push('/login');
-        return null;
+        return (
+             <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="secondary" size="icon" className="rounded-full">
+                        <Avatar>
+                            <AvatarFallback>G</AvatarFallback>
+                        </Avatar>
+                        <span className="sr-only">Toggle user menu</span>
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>Guest Account</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => router.push('/login')}>
+                        <LogIn className="mr-2 h-4 w-4" />
+                        <span>Login</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => router.push('/register')}>
+                        <UserPlus className="mr-2 h-4 w-4" />
+                        <span>Register</span>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        )
     }
 
     return (
@@ -191,16 +210,9 @@ function AppSidebar() {
 }
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-    const { user, loading } = useAuth();
-    const router = useRouter();
+    const { loading } = useAuth();
 
-    React.useEffect(() => {
-        if (!loading && !user) {
-            router.push('/login');
-        }
-    }, [user, loading, router]);
-
-    if (loading || !user) {
+    if (loading) {
         return (
             <div className="flex min-h-screen w-full items-center justify-center bg-background">
                 <Loader2 className="h-10 w-10 animate-spin text-primary" />

@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ArrowRight, UserPlus } from "lucide-react";
+import { ArrowRight, User, UserPlus } from "lucide-react";
 
 export default function WelcomePage() {
   return (
@@ -33,7 +33,7 @@ export default function WelcomePage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col gap-4">
                 <Button asChild className="w-full font-bold">
                     <Link href="/login">
                         Login
@@ -44,6 +44,11 @@ export default function WelcomePage() {
                     <Link href="/register">
                         Register
                         <UserPlus className="ml-2 h-4 w-4" />
+                    </Link>
+                </Button>
+                 <Button asChild variant="ghost" className="w-full">
+                    <Link href="/doctor-agro">
+                        Continue as Guest
                     </Link>
                 </Button>
             </div>
