@@ -54,14 +54,18 @@ export default function RegisterPage() {
     } catch (e) {
         const error = e as FirebaseError;
         let errorMessage = "An unknown error occurred.";
-        if (error.code === 'auth/email-already-in-use') {
-            errorMessage = 'This email is already registered. Please login.';
-        } else if (error.code === 'auth/weak-password') {
-            errorMessage = 'Password should be at least 6 characters.'
-        } else if (error.code === 'auth/operation-not-allowed') {
-            errorMessage = "Email/Password sign-in is not enabled in the Firebase console.";
-        } else {
-            errorMessage = "Failed to register. Please try again.";
+        switch (error.code) {
+            case 'auth/email-already-in-use':
+                errorMessage = 'This email is already registered. Please login.';
+                break;
+            case 'auth/weak-password':
+                errorMessage = 'Password should be at least 6 characters.'
+                break;
+            case 'auth/operation-not-allowed':
+                errorMessage = "Email/Password sign-in is not enabled in the Firebase console.";
+                break;
+            default:
+                errorMessage = `Failed to register: ${error.message}`;
         }
         setError(errorMessage);
         toast({

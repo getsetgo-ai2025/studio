@@ -50,7 +50,6 @@ export default function LoginPage() {
         let errorMessage = "An unknown error occurred.";
         switch (error.code) {
             case 'auth/user-not-found':
-            case 'auth/wrong-password':
             case 'auth/invalid-credential':
                 errorMessage = "Invalid email or password.";
                 break;
@@ -58,7 +57,7 @@ export default function LoginPage() {
                 errorMessage = "Email/Password sign-in is not enabled in the Firebase console.";
                 break;
             default:
-                errorMessage = "Failed to login. Please try again.";
+                errorMessage = `Failed to login: ${error.message}`;
         }
         setError(errorMessage);
         toast({
