@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import {
   Avatar,
   AvatarFallback,
@@ -40,8 +40,10 @@ import {
   User,
   Languages,
   Recycle,
+  Loader2,
 } from "lucide-react";
 import { LanguageProvider, useLanguage } from "@/hooks/use-language";
+import { AuthProvider, useAuth } from "@/hooks/use-auth";
 
 
 const navItems = [
@@ -54,7 +56,7 @@ const navItems = [
   {
     href: "/market-analysis",
     icon: LineChart,
-    label: { en: "Market Analysis", kn: "ಮಾರುಕಟ್ಟೆ ವಿಶ್ಲೇಷಣೆ" },
+    label: { en: "Market Analysis", kn: "ಮಾರುಟ್ಟೆ ವಿಶ್ಲೇಷಣೆ" },
     tooltip: { en: "Market Insights", kn: "ಮಾರುಕಟ್ಟೆ ಒಳನೋಟಗಳು" },
   },
   {
@@ -93,19 +95,35 @@ function LanguageSwitcher() {
     )
 }
 
-function AppHeader() {
-  const { isMobile } = useSidebar();
-  return (
-    <header className="flex h-14 items-center gap-4 border-b bg-card px-4 lg:h-[60px] lg:px-6">
-      <SidebarTrigger className="md:hidden" />
-      <div className="w-full flex-1" />
-      <LanguageSwitcher />
+function UserMenu() {
+    const { user, loading, error, signOut } = useAuth();
+    const router = useRouter();
+
+    if (loading) {
+        return <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+    }
+
+    if (error) {
+        console.error("Auth error:", error);
+        // Optionally redirect to login if auth state is erroneous
+        router.push('/login');
+        return null;
+    }
+    
+    if (!user) {
+        // This should theoretically not be reached due to the layout's auth check,
+        // but as a fallback, we can redirect.
+        router.push('/login');
+        return null;
+    }
+
+    return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="secondary" size="icon" className="rounded-full">
             <Avatar>
-              <AvatarImage src="https://placehold.co/40x40.png" alt="User Avatar" data-ai-hint="farmer avatar" />
-              <AvatarFallback>U</AvatarFallback>
+              <AvatarImage src={user.photoURL || "https://placehold.co/40x40.png"} alt={user.displayName || 'User Avatar'} data-ai-hint="farmer avatar" />
+              <AvatarFallback>{user.email?.[0].toUpperCase() || 'U'}</AvatarFallback>
             </Avatar>
             <span className="sr-only">Toggle user menu</span>
           </Button>
@@ -118,12 +136,23 @@ function AppHeader() {
             <span>Profile</span>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={signOut}>
             <LogOut className="mr-2 h-4 w-4" />
             <span>Log out</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+    );
+}
+
+function AppHeader() {
+  const { isMobile } = useSidebar();
+  return (
+    <header className="flex h-14 items-center gap-4 border-b bg-card px-4 lg:h-[60px] lg:px-6">
+      <SidebarTrigger className="md:hidden" />
+      <div className="w-full flex-1" />
+      <LanguageSwitcher />
+      <UserMenu />
     </header>
   );
 }
@@ -162,6 +191,23 @@ function AppSidebar() {
 }
 
 function AppLayoutContent({ children }: { children: React.ReactNode }) {
+    const { user, loading } = useAuth();
+    const router = useRouter();
+
+    React.useEffect(() => {
+        if (!loading && !user) {
+            router.push('/login');
+        }
+    }, [user, loading, router]);
+
+    if (loading || !user) {
+        return (
+            <div className="flex min-h-screen w-full items-center justify-center bg-background">
+                <Loader2 className="h-10 w-10 animate-spin text-primary" />
+            </div>
+        )
+    }
+
     return (
     <SidebarProvider>
       <AppSidebar />
@@ -180,8 +226,10 @@ function AppLayoutContent({ children }: { children: React.ReactNode }) {
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <LanguageProvider>
-        <AppLayoutContent>{children}</AppLayoutContent>
-    </LanguageProvider>
+    <AuthProvider>
+      <LanguageProvider>
+          <AppLayoutContent>{children}</AppLayoutContent>
+      </LanguageProvider>
+    </AuthProvider>
   );
 }

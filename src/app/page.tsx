@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, UserPlus } from "lucide-react";
 
 export default function WelcomePage() {
   return (
@@ -33,17 +33,25 @@ export default function WelcomePage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-center text-sm text-muted-foreground">
-            Access as a guest to explore the features.
-          </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+                <Button asChild className="w-full font-bold">
+                    <Link href="/login">
+                        Login
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                </Button>
+                <Button asChild variant="secondary" className="w-full font-bold">
+                    <Link href="/register">
+                        Register
+                        <UserPlus className="ml-2 h-4 w-4" />
+                    </Link>
+                </Button>
+            </div>
         </CardContent>
         <CardFooter>
-          <Button asChild className="w-full font-bold">
-            <Link href="/doctor-agro">
-              Enter as Guest
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
+            <p className="text-center text-xs text-muted-foreground mx-auto">
+                Login or register to create your profile and get personalized assistance.
+            </p>
         </CardFooter>
       </Card>
     </main>
