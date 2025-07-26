@@ -8,7 +8,7 @@ const firebaseConfig = {
   "storageBucket": "raita-sahayak.firebasestorage.app",
   "apiKey": process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   "authDomain": "raita-sahayak.firebaseapp.com",
-  "measurementId": "",
+  "measurementId": "G-DR75L213LS",
   "messagingSenderId": "868540522043"
 };
 
