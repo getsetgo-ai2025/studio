@@ -1,48 +1,80 @@
+
 "use client";
 
-import { useActionState, useEffect, useRef } from "react";
-import { useFormStatus } from "react-dom";
-import { login } from "./actions";
+import { useEffect, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Loader2, ArrowRight } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/lib/firebase";
+import { FirebaseError } from "firebase/app";
+import { useAuth } from "@/hooks/use-auth";
 
-function SubmitButton() {
-  const { pending } = useFormStatus();
-
-  return (
-    <Button type="submit" className="w-full" disabled={pending}>
-      {pending ? (
-        <>
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          Logging in...
-        </>
-      ) : (
-        "Login"
-      )}
-    </Button>
-  );
-}
 
 export default function LoginPage() {
-  const [state, formAction] = useActionState(login, null);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
   const { toast } = useToast();
-  const formRef = useRef<HTMLFormElement>(null);
+  const router = useRouter();
+  const { user, loading: authLoading } = useAuth();
 
   useEffect(() => {
-    if (state?.error) {
+      if (!authLoading && user) {
+          router.push('/');
+      }
+  }, [user, authLoading, router]);
+
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
       toast({
-        variant: "destructive",
-        title: "Login Failed",
-        description: state.error,
+        title: "Login Successful",
+        description: "Welcome back!",
       });
+      router.push('/');
+    } catch (e) {
+        const error = e as FirebaseError;
+        let errorMessage = "An unknown error occurred.";
+        switch (error.code) {
+            case 'auth/user-not-found':
+            case 'auth/wrong-password':
+            case 'auth/invalid-credential':
+                errorMessage = "Invalid email or password.";
+                break;
+            default:
+                errorMessage = "Failed to login. Please try again.";
+        }
+        setError(errorMessage);
+        toast({
+            variant: "destructive",
+            title: "Login Failed",
+            description: errorMessage,
+        });
+    } finally {
+        setIsLoading(false);
     }
-  }, [state, toast]);
+  };
+
+  if (authLoading || user) {
+    return (
+        <div className="flex min-h-screen w-full items-center justify-center bg-background">
+            <Loader2 className="h-10 w-10 animate-spin text-primary" />
+        </div>
+    )
+  }
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-background p-4">
@@ -53,23 +85,49 @@ export default function LoginPage() {
             Enter your email below to login to your account.
           </CardDescription>
         </CardHeader>
-        <form ref={formRef} action={formAction}>
+        <form onSubmit={handleSubmit}>
           <CardContent className="grid gap-4">
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" name="email" placeholder="m@example.com" required />
+              <Input 
+                id="email" 
+                type="email" 
+                name="email" 
+                placeholder="m@example.com" 
+                required 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={isLoading}
+              />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" name="password" required />
+              <Input 
+                id="password" 
+                type="password" 
+                name="password" 
+                required 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={isLoading}
+              />
             </div>
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
-            <SubmitButton />
-            {state?.error && !state.fieldErrors && (
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Logging in...
+                </>
+              ) : (
+                "Login"
+              )}
+            </Button>
+            {error && (
                <Alert variant="destructive">
                   <AlertTitle>Login Failed</AlertTitle>
-                  <AlertDescription>{state.error}</AlertDescription>
+                  <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
             <div className="text-center text-sm">
