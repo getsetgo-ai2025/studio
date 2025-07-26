@@ -10,10 +10,10 @@ import { getRecentNews, type NewsArticle } from "@/ai/flows/news-generator";
 import { useEffect, useState } from "react";
 
 const slideshowImages = [
-    { src: "https://placehold.co/800x400.png", alt: { en: "Farmer using a drone", kn: "ಡ್ರೋನ್ ಬಳಸುತ್ತಿರುವ ರೈತ" }, hint: "drone agriculture" },
-    { src: "https://placehold.co/800x400.png", alt: { en: "Smart farm with sensors", kn: "ಸಂವೇದಕಗಳೊಂದಿಗೆ ಸ್ಮಾರ್ಟ್ ಫಾರ್ಮ್" }, hint: "smart farm" },
-    { src: "https://placehold.co/800x400.png", alt: { en: "Automated irrigation system", kn: "ಸ್ವಯಂಚಾಲಿತ ನೀರಾವರಿ ವ್ಯವಸ್ಥೆ" }, hint: "irrigation system" },
-    { src: "https://placehold.co/800x400.png", alt: { en: "Farmer with a tablet", kn: "ಟ್ಯಾಬ್ಲೆಟ್ ಹಿಡಿದ ರೈತ" }, hint: "farmer tablet" },
+    { src: "https://images.unsplash.com/photo-1627920769363-a0153351996c?q=80&w=1920&auto=format&fit=crop", alt: { en: "Farmer using a drone", kn: "ಡ್ರೋನ್ ಬಳಸುತ್ತಿರುವ ರೈತ" }, hint: "drone agriculture" },
+    { src: "https://images.unsplash.com/photo-1599387600789-12346908355a?q=80&w=1920&auto=format&fit=crop", alt: { en: "Smart farm with sensors", kn: "ಸಂವೇದಕಗಳೊಂದಿಗೆ ಸ್ಮಾರ್ಟ್ ಫಾರ್ಮ್" }, hint: "smart farm" },
+    { src: "https://images.unsplash.com/photo-1591784465425-43a91a19b58a?q=80&w=1920&auto=format&fit=crop", alt: { en: "Automated irrigation system", kn: "ಸ್ವಯಂಚಾಲಿತ ನೀರಾವರಿ ವ್ಯವಸ್ಥೆ" }, hint: "irrigation system" },
+    { src: "https://images.unsplash.com/photo-1563201515-68095b578533?q=80&w=1920&auto=format&fit=crop", alt: { en: "Farmer with a tablet", kn: "ಟ್ಯಾಬ್ಲೆಟ್ ಹಿಡಿದ ರೈತ" }, hint: "farmer tablet" },
 ];
 
 function NewsSection() {
