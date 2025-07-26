@@ -42,8 +42,8 @@ import {
   Recycle,
   Loader2,
 } from "lucide-react";
-import { LanguageProvider, useLanguage } from "@/hooks/use-language";
-import { AuthProvider, useAuth } from "@/hooks/use-auth";
+import { useLanguage } from "@/hooks/use-language";
+import { useAuth } from "@/hooks/use-auth";
 
 
 const navItems = [
@@ -190,7 +190,7 @@ function AppSidebar() {
   );
 }
 
-function AppLayoutContent({ children }: { children: React.ReactNode }) {
+export default function AppLayout({ children }: { children: React.ReactNode }) {
     const { user, loading } = useAuth();
     const router = useRouter();
 
@@ -221,15 +221,4 @@ function AppLayoutContent({ children }: { children: React.ReactNode }) {
       </SidebarInset>
     </SidebarProvider>
     )
-}
-
-
-export default function AppLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <AuthProvider>
-      <LanguageProvider>
-          <AppLayoutContent>{children}</AppLayoutContent>
-      </LanguageProvider>
-    </AuthProvider>
-  );
 }
