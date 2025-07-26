@@ -109,6 +109,7 @@ export default function HomePage() {
                                             alt={image.alt[language]} 
                                             data-ai-hint={image.hint}
                                             fill
+                                            priority={index === 0}
                                             className="rounded-lg object-cover"
                                         />
                                     </div>
