@@ -6,7 +6,7 @@ const firebaseConfig = {
   "projectId": "raita-sahayak",
   "appId": "1:868540522043:web:f79733e21e5f903964861e",
   "storageBucket": "raita-sahayak.firebasestorage.app",
-  "apiKey": "AIzaSyAGzCwapCVZCh-SV5WqYws2_wsfeyKWd3U",
+  "apiKey": process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   "authDomain": "raita-sahayak.firebaseapp.com",
   "measurementId": "",
   "messagingSenderId": "868540522043"
