@@ -39,6 +39,7 @@ import {
   Tractor,
   User,
   Languages,
+  Recycle,
 } from "lucide-react";
 import { LanguageProvider, useLanguage } from "@/hooks/use-language";
 
@@ -61,6 +62,12 @@ const navItems = [
     icon: Landmark,
     label: { en: "Govt Schemes", kn: "ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು" },
     tooltip: { en: "Government Schemes", kn: "ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು" },
+  },
+  {
+    href: "/damaged-crop-recovery",
+    icon: Recycle,
+    label: { en: "Crop Recovery", kn: "ಬೆಳೆ ಚೇತರಿಕೆ" },
+    tooltip: { en: "Damaged Crop Recovery & Market Finder", kn: "ಹಾನಿಗೊಳಗಾದ ಬೆಳೆ ಚೇತರಿಕೆ ಮತ್ತು ಮಾರುಕಟ್ಟೆ ಶೋಧಕ" },
   },
 ];
 
