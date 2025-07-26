@@ -95,9 +95,9 @@ function LanguageSwitcher() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
-                    <Languages className="h-5 w-5" />
-                    <span className="sr-only">Change language</span>
+                <Button variant="ghost">
+                    <Languages className="mr-2 h-5 w-5" />
+                    <span>{language === 'kn' ? 'ಭಾಷೆ' : 'Translate'}</span>
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
