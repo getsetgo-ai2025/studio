@@ -26,5 +26,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-// Updated to trigger a restart
 export default nextConfig;
