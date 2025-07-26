@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useActionState } from "react";
+import { useEffect, useRef, useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { getAnalysis } from "./actions";
 import { Button } from "@/components/ui/button";
@@ -17,9 +17,10 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AlertCircle, Loader2, Mic, Volume2, Target, TrendingUp, Users } from "lucide-react";
+import { AlertCircle, Loader2, Mic, MicOff, Volume2, Target, TrendingUp, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/hooks/use-language";
+import { useSpeechRecognition } from "@/hooks/use-speech-recognition";
 
 function SubmitButton() {
   const { pending: isPending } = useFormStatus();
@@ -161,6 +162,27 @@ export default function MarketAnalysisPage() {
   });
   const { pending: isPending } = useFormStatus();
   const formRef = useRef<HTMLFormElement>(null);
+  const [cropDescription, setCropDescription] = useState('');
+
+  const { isRecognizing, transcript, startRecognition, stopRecognition } = useSpeechRecognition({
+    onTranscript: (text) => setCropDescription(text),
+    onError: () => toast({ variant: "destructive", title: "Speech Recognition Error", description: "Please check your microphone permissions and try again." })
+  });
+
+  useEffect(() => {
+    if (transcript) {
+        setCropDescription(transcript);
+    }
+  }, [transcript]);
+
+  const handleMicClick = () => {
+    if (isRecognizing) {
+        stopRecognition();
+    } else {
+        startRecognition();
+    }
+  }
+
 
   useEffect(() => {
     if (state.error && !state.formErrors) {
@@ -172,6 +194,7 @@ export default function MarketAnalysisPage() {
     }
      if (state.data) {
         formRef.current?.reset();
+        setCropDescription('');
     }
   }, [state, toast]);
 
@@ -186,6 +209,7 @@ export default function MarketAnalysisPage() {
         </CardHeader>
         <form ref={formRef} action={(formData) => {
             formData.append('language', language);
+            formData.set('cropDescription', cropDescription);
             formAction(formData);
         }}>
           <CardContent className="space-y-4">
@@ -207,13 +231,15 @@ export default function MarketAnalysisPage() {
                 <Textarea
                   id="cropDescription"
                   name="cropDescription"
+                  value={cropDescription}
+                  onChange={(e) => setCropDescription(e.target.value)}
                   placeholder={language === 'kn' ? "ಉದಾಹರಣೆಗೆ, 'ಬಾಸಮತಿ ಅಕ್ಕಿ', 'ಸಾವಯವ ಮಾವು'" : "e.g., 'Basmati Rice', 'Organic Mangoes'"}
                   rows={2}
                   required
                   className="pr-10"
                 />
-                <Button type="button" variant="ghost" size="icon" className="absolute bottom-2 right-1 h-7 w-7">
-                  <Mic className="h-4 w-4" />
+                <Button type="button" variant="ghost" size="icon" className="absolute bottom-2 right-1 h-7 w-7" onClick={handleMicClick}>
+                   {isRecognizing ? <MicOff className="h-4 w-4 text-destructive" /> : <Mic className="h-4 w-4" />}
                   <span className="sr-only">Use voice input</span>
                 </Button>
               </div>

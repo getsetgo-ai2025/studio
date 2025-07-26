@@ -18,9 +18,10 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Camera, AlertCircle, Loader2, Mic, Volume2 } from "lucide-react";
+import { Camera, AlertCircle, Loader2, Mic, Volume2, MicOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/hooks/use-language";
+import { useSpeechRecognition } from "@/hooks/use-speech-recognition";
 
 function SubmitButton() {
   const { pending: isPending } = useFormStatus();
@@ -133,6 +134,27 @@ export default function DoctorAgroPage() {
   const { pending: isPending } = useFormStatus();
   const formRef = useRef<HTMLFormElement>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [description, setDescription] = useState('');
+
+  const { isRecognizing, transcript, startRecognition, stopRecognition } = useSpeechRecognition({
+    onTranscript: (text) => setDescription(text),
+    onError: () => toast({ variant: "destructive", title: "Speech Recognition Error", description: "Please check your microphone permissions and try again." })
+  });
+  
+  useEffect(() => {
+    if (transcript) {
+        setDescription(transcript);
+    }
+  }, [transcript]);
+
+  const handleMicClick = () => {
+    if (isRecognizing) {
+        stopRecognition();
+    } else {
+        startRecognition();
+    }
+  }
+
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -159,6 +181,7 @@ export default function DoctorAgroPage() {
     if (state.data) {
         formRef.current?.reset();
         setImagePreview(null);
+        setDescription('');
     }
   }, [state, toast]);
 
@@ -173,6 +196,7 @@ export default function DoctorAgroPage() {
         </CardHeader>
         <form ref={formRef} action={(formData) => {
             formData.append('language', language);
+            formData.set('description', description);
             formAction(formData);
         }}>
           <CardContent className="space-y-4">
@@ -182,13 +206,15 @@ export default function DoctorAgroPage() {
                 <Textarea
                   id="description"
                   name="description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
                   placeholder={language === 'kn' ? "ಉದಾಹರಣೆಗೆ, 'ನನ್ನ ಟೊಮೆಟೊ ಗಿಡಗಳ ಎಲೆಗಳ ಮೇಲೆ ಹಳದಿ ಚುಕ್ಕೆಗಳಿವೆ ಮತ್ತು ಹಣ್ಣು ಕೊಳೆಯುತ್ತಿದೆ.'" : "e.g., 'My tomato plants have yellow spots on the leaves and the fruit is rotting.'"}
                   rows={4}
                   required
                   className="pr-10"
                 />
-                <Button type="button" variant="ghost" size="icon" className="absolute bottom-2 right-1 h-7 w-7">
-                  <Mic className="h-4 w-4" />
+                <Button type="button" variant="ghost" size="icon" className="absolute bottom-2 right-1 h-7 w-7" onClick={handleMicClick}>
+                   {isRecognizing ? <MicOff className="h-4 w-4 text-destructive" /> : <Mic className="h-4 w-4" />}
                   <span className="sr-only">Use voice input</span>
                 </Button>
               </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useActionState } from "react";
+import { useEffect, useRef, useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { getSchemes } from "./actions";
 import { Button } from "@/components/ui/button";
@@ -23,9 +23,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { AlertCircle, Loader2, Mic, Volume2 } from "lucide-react";
+import { AlertCircle, Loader2, Mic, MicOff, Volume2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/hooks/use-language";
+import { useSpeechRecognition } from "@/hooks/use-speech-recognition";
+
 
 function SubmitButton() {
   const { pending: isPending } = useFormStatus();
@@ -173,6 +175,28 @@ export default function GovtSchemesPage() {
   const { pending: isPending } = useFormStatus();
   const formRef = useRef<HTMLFormElement>(null);
 
+  const [subsidiesFor, setSubsidiesFor] = useState('');
+
+  const { isRecognizing, transcript, startRecognition, stopRecognition } = useSpeechRecognition({
+    onTranscript: (text) => setSubsidiesFor(text),
+    onError: () => toast({ variant: "destructive", title: "Speech Recognition Error", description: "Please check your microphone permissions and try again." })
+  });
+  
+  useEffect(() => {
+    if (transcript) {
+        setSubsidiesFor(transcript);
+    }
+  }, [transcript]);
+
+  const handleMicClick = () => {
+    if (isRecognizing) {
+        stopRecognition();
+    } else {
+        startRecognition();
+    }
+  }
+
+
   useEffect(() => {
     if (state.error && !state.formErrors) {
       toast({
@@ -183,6 +207,7 @@ export default function GovtSchemesPage() {
     }
     if (state.data) {
       formRef.current?.reset();
+      setSubsidiesFor('');
     }
   }, [state, toast]);
 
@@ -199,6 +224,7 @@ export default function GovtSchemesPage() {
         </CardHeader>
         <form ref={formRef} action={(formData) => {
             formData.append('language', language);
+            formData.set('subsidiesFor', subsidiesFor);
             formAction(formData);
         }}>
           <CardContent className="grid gap-4 md:grid-cols-2">
@@ -252,6 +278,8 @@ export default function GovtSchemesPage() {
                 <Textarea
                   id="subsidiesFor"
                   name="subsidiesFor"
+                  value={subsidiesFor}
+                  onChange={(e) => setSubsidiesFor(e.target.value)}
                   placeholder={language === 'kn' ? "ಉದಾಹರಣೆಗೆ, 'ನೀರಾವರಿ ಉಪಕರಣಗಳು, ಬೀಜಗಳು ಮತ್ತು ರಸಗೊಬ್ಬರಗಳು'" : "e.g., 'Irrigation equipment, seeds, and fertilizers'"}
                   rows={1}
                   required
@@ -262,8 +290,9 @@ export default function GovtSchemesPage() {
                   variant="ghost"
                   size="icon"
                   className="absolute bottom-1 right-1 h-7 w-7"
+                  onClick={handleMicClick}
                 >
-                  <Mic className="h-4 w-4" />
+                  {isRecognizing ? <MicOff className="h-4 w-4 text-destructive" /> : <Mic className="h-4 w-4" />}
                   <span className="sr-only">Use voice input</span>
                 </Button>
               </div>
