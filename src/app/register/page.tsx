@@ -58,6 +58,8 @@ export default function RegisterPage() {
             errorMessage = 'This email is already registered. Please login.';
         } else if (error.code === 'auth/weak-password') {
             errorMessage = 'Password should be at least 6 characters.'
+        } else if (error.code === 'auth/operation-not-allowed') {
+            errorMessage = "Email/Password sign-in is not enabled in the Firebase console.";
         } else {
             errorMessage = "Failed to register. Please try again.";
         }

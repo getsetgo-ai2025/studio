@@ -54,6 +54,9 @@ export default function LoginPage() {
             case 'auth/invalid-credential':
                 errorMessage = "Invalid email or password.";
                 break;
+            case 'auth/operation-not-allowed':
+                errorMessage = "Email/Password sign-in is not enabled in the Firebase console.";
+                break;
             default:
                 errorMessage = "Failed to login. Please try again.";
         }
