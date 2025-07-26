@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Info, ExternalLink } from "lucide-react";
 import packageJson from '../../../../package.json';
