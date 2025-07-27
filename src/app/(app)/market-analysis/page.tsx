@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useRef, useActionState, useState } from "react";
@@ -98,6 +99,13 @@ function ResultCard({
     ${language === 'kn' ? 'ಮಾರುಕಟ್ಟೆ ಅವಲೋಕನ:' : 'Market Overview:'} ${data.marketOverview}
   `;
 
+  const formattedValue = new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(data.predictiveValuePerTon);
+
   return (
     <Card>
       <CardHeader>
@@ -122,7 +130,7 @@ function ResultCard({
                     <TrendingUp className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">₹{data.predictiveValuePerTon.toLocaleString()}</div>
+                    <div className="text-2xl font-bold">{formattedValue}</div>
                 </CardContent>
              </Card>
              <Card>
