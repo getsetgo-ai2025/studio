@@ -43,7 +43,7 @@ function SubmitButton() {
 }
 
 const ForecastDetails = ({ forecast, lang }: { forecast: z.infer<typeof DailyForecastType>, lang: 'en' | 'kn' }) => (
-    <div className='mt-2 space-y-2 text-sm text-muted-foreground'>
+    <div className='mb-4 space-y-2 text-sm text-muted-foreground'>
         <div className="font-semibold">{forecast.condition}</div>
         <div className="flex flex-wrap gap-x-4 gap-y-1">
             <div className="flex items-center gap-1">
@@ -116,8 +116,8 @@ function ResultCard({
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-foreground">{data.today.suggestion}</p>
                         <ForecastDetails forecast={data.today.forecast} lang={language} />
+                        <p className="text-foreground">{data.today.suggestion}</p>
                     </CardContent>
                 </Card>
                  <Card>
@@ -127,8 +127,8 @@ function ResultCard({
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-foreground">{data.tomorrow.suggestion}</p>
                         <ForecastDetails forecast={data.tomorrow.forecast} lang={language} />
+                        <p className="text-foreground">{data.tomorrow.suggestion}</p>
                     </CardContent>
                 </Card>
                  <Card>
