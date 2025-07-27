@@ -88,7 +88,7 @@ export default function HomePage() {
              <Card>
                 <CardHeader>
                     <CardTitle className="font-headline flex items-center gap-2">
-                        <HomeIcon /> {language === 'kn' ? 'ರೈತ ಸಹಾಯಕಕ್ಕೆ ಸ್ವಾಗತ' : 'Welcome to Raita Sahayak'}
+                        <HomeIcon /> {language === 'kn' ? 'ರೈತ ಸಹಾಯಕಕ್ಕೆ ಸ್ವಾಗತ' : 'Welcome to Raitha Sahayak'}
                     </CardTitle>
                     <CardDescription>
                         {language === 'kn' ? 'ಕೃತಕ ಬುದ್ಧಿಮತ್ತೆಯೊಂದಿಗೆ ಭಾರತೀಯ ರೈತರನ್ನು ಸಬಲೀಕರಣಗೊಳಿಸುವುದು' : 'Empowering Indian Farmers with Artificial Intelligence'}
