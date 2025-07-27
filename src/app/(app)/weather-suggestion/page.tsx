@@ -22,7 +22,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/hooks/use-language';
 import { type WeatherSuggestionOutput } from '@/ai/flows/weather-suggestion';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { type DailyForecastSchema } from '@/ai/tools/get-weather-forecast';
+import { type DailyForecastSchema as DailyForecastType } from '@/ai/schemas/weather-forecast';
 import { type z } from 'zod';
 
 function SubmitButton() {
@@ -42,7 +42,7 @@ function SubmitButton() {
   );
 }
 
-const ForecastDetails = ({ forecast, lang }: { forecast: z.infer<typeof DailyForecastSchema>, lang: 'en' | 'kn' }) => (
+const ForecastDetails = ({ forecast, lang }: { forecast: z.infer<typeof DailyForecastType>, lang: 'en' | 'kn' }) => (
     <div className='mt-2 space-y-2 text-sm text-muted-foreground'>
         <div className="font-semibold">{forecast.condition}</div>
         <div className="flex flex-wrap gap-x-4 gap-y-1">

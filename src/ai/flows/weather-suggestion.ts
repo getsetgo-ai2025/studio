@@ -11,7 +11,8 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { getWeatherForecastTool, DailyForecastSchema } from '../tools/get-weather-forecast';
+import { getWeatherForecast } from '../tools/get-weather-forecast';
+import { DailyForecastSchema } from '../schemas/weather-forecast';
 
 const WeatherSuggestionInputSchema = z.object({
   location: z.string().describe('The current location of the user.'),
@@ -47,7 +48,6 @@ const weatherSuggestionPrompt = ai.definePrompt({
     forecast: z.any(),
   })},
   output: {schema: WeatherSuggestionOutputSchema},
-  tools: [getWeatherForecastTool],
   prompt: `You are an expert agronomist providing concise weather-based advice to farmers.
 
   A farmer has provided their location, the crop they are growing, and the 7-day weather forecast.
@@ -77,8 +77,8 @@ const weatherSuggestionFlow = ai.defineFlow(
     outputSchema: WeatherSuggestionOutputSchema,
   },
   async input => {
-    // First, call the tool to get the weather data.
-    const weatherData = await getWeatherForecastTool.fn(input);
+    // First, call the function to get the weather data.
+    const weatherData = await getWeatherForecast(input);
 
     // Then, pass the weather data along with the original input to the prompt.
     const {output} = await weatherSuggestionPrompt({ ...input, forecast: weatherData });

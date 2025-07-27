@@ -11,3 +11,4 @@ import '@/ai/tools/find-alternative-buyers.ts';
 import '@/ai/flows/news-generator.ts';
 import '@/ai/tools/get-weather-forecast.ts';
 import '@/ai/flows/weather-suggestion.ts';
+import '@/ai/schemas/weather-forecast.ts';
