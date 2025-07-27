@@ -99,12 +99,7 @@ function ResultCard({
     ${language === 'kn' ? 'ಮಾರುಕಟ್ಟೆ ಅವಲೋಕನ:' : 'Market Overview:'} ${data.marketOverview}
   `;
 
-  const formattedValue = new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(data.predictiveValuePerTon);
+  const formattedValue = `₹${new Intl.NumberFormat('en-IN').format(data.predictiveValuePerTon)}`;
 
   return (
     <Card>
