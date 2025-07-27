@@ -5,20 +5,9 @@ import { ai } from "@/ai/genkit";
 import { z } from "zod";
 import { DailyForecastSchema } from "../schemas/weather-forecast";
 
-const getWeatherForecastTool = ai.defineTool(
-  {
-    name: "getWeatherForecastTool",
-    description: "Fetches the current weather and a 7-day forecast for a given location.",
-    inputSchema: z.object({
-      location: z.string().describe("The location to get the weather forecast for (e.g., 'Bangalore, India')."),
-    }),
-    outputSchema: z.object({
-        today: DailyForecastSchema,
-        forecast: z.array(DailyForecastSchema).describe("A 7-day weather forecast."),
-    })
-  },
-  async ({ location }) => {
-    console.log(`Fetching mock weather forecast for ${location}`);
+// This is the async function that will be exported and used by the flow.
+export async function getWeatherForecast(input: { location: string }) {
+    console.log(`Fetching mock weather forecast for ${input.location}`);
     
     // This is a mock implementation. In a real application, you would
     // query a real weather API service.
@@ -63,10 +52,21 @@ const getWeatherForecastTool = ai.defineTool(
       today: forecast[0],
       forecast: forecast,
     };
-  }
-);
-
-// This is the async function that will be exported and used by the flow.
-export async function getWeatherForecast(input: { location: string }) {
-    return await getWeatherForecastTool.fn(input);
 }
+
+
+// The tool is defined but not exported directly. The async function above is exported instead.
+ai.defineTool(
+  {
+    name: "getWeatherForecastTool",
+    description: "Fetches the current weather and a 7-day forecast for a given location.",
+    inputSchema: z.object({
+      location: z.string().describe("The location to get the weather forecast for (e.g., 'Bangalore, India')."),
+    }),
+    outputSchema: z.object({
+        today: DailyForecastSchema,
+        forecast: z.array(DailyForecastSchema).describe("A 7-day weather forecast."),
+    })
+  },
+  getWeatherForecast
+);
