@@ -41,30 +41,22 @@ export async function getSuggestions(
     const result = await getWeatherSuggestions(inputData);
 
     if (language === 'kn') {
-        const translatedSuggestions = await Promise.all(
-            result.suggestions.map(async (s) => {
-                const [
-                    translatedDay,
-                    translatedDate,
-                    translatedCondition,
-                    translatedSuggestion,
-                ] = await Promise.all([
-                    translateText({ text: s.day, targetLanguage: 'kn' }),
-                    translateText({ text: s.date, targetLanguage: 'kn' }),
-                    translateText({ text: s.condition, targetLanguage: 'kn' }),
-                    translateText({ text: s.suggestion, targetLanguage: 'kn' }),
-                ]);
-                return {
-                    day: translatedDay.translatedText,
-                    date: translatedDate.translatedText,
-                    condition: translatedCondition.translatedText,
-                    suggestion: translatedSuggestion.translatedText,
-                };
-            })
-        );
+        const [
+            translatedToday,
+            translatedTomorrow,
+            translatedNext7Days,
+        ] = await Promise.all([
+            translateText({ text: result.today, targetLanguage: 'kn' }),
+            translateText({ text: result.tomorrow, targetLanguage: 'kn' }),
+            translateText({ text: result.next7Days, targetLanguage: 'kn' }),
+        ]);
 
         return {
-            data: { suggestions: translatedSuggestions },
+            data: { 
+                today: translatedToday.translatedText,
+                tomorrow: translatedTomorrow.translatedText,
+                next7Days: translatedNext7Days.translatedText,
+             },
             error: null,
         }
     }

@@ -19,15 +19,10 @@ const WeatherSuggestionInputSchema = z.object({
 });
 export type WeatherSuggestionInput = z.infer<typeof WeatherSuggestionInputSchema>;
 
-const DailySuggestionSchema = z.object({
-    day: z.string().describe("The day of the week."),
-    date: z.string().describe("The date."),
-    condition: z.string().describe("The weather condition."),
-    suggestion: z.string().describe("Actionable recommendation for the farmer for that day."),
-});
-
 const WeatherSuggestionOutputSchema = z.object({
-    suggestions: z.array(DailySuggestionSchema).describe("A list of daily suggestions for the next 7 days."),
+    today: z.string().describe("Actionable recommendation for the farmer for today."),
+    tomorrow: z.string().describe("Actionable recommendation for the farmer for tomorrow."),
+    next7Days: z.string().describe("A summary of recommendations for the next 7 days, highlighting any major weather events to watch for."),
 });
 export type WeatherSuggestionOutput = z.infer<typeof WeatherSuggestionOutputSchema>;
 
@@ -40,15 +35,17 @@ const weatherSuggestionPrompt = ai.definePrompt({
   input: {schema: WeatherSuggestionInputSchema},
   output: {schema: WeatherSuggestionOutputSchema},
   tools: [getWeatherForecastTool],
-  prompt: `You are an expert agronomist providing weather-based advice to farmers.
+  prompt: `You are an expert agronomist providing concise weather-based advice to farmers.
 
   A farmer has provided their location and the crop they are growing.
-  1. First, use the getWeatherForecastTool to get the 7-day weather forecast for the user's location.
-  2. For each day in the forecast, provide a simple, actionable suggestion for the specified crop.
-  3. The advice should consider the weather conditions for that day (temperature, rainfall, humidity, wind).
-  4. Specifically address potential stress conditions like heavy rain, heatwaves, or strong winds, and relate them to the crop.
-  5. Examples of advice include watering needs, when it's safe (or unsafe) to spray pesticides, potential harvesting delays, or protective measures.
-  6. The output should be a list of daily suggestions.
+  1.  First, use the getWeatherForecastTool to get the 7-day weather forecast for the user's location.
+  2.  Provide a simple, actionable suggestion for today.
+  3.  Provide a simple, actionable suggestion for tomorrow.
+  4.  Provide a summary of advice for the next 7 days, focusing on significant weather events (like heatwaves, heavy rain) and the corresponding actions.
+  5.  The advice should consider the weather conditions (temperature, rainfall, humidity, wind) and relate them to the specific crop.
+  6.  Examples of advice include watering needs, when it's safe (or unsafe) to spray pesticides, potential harvesting delays, or protective measures.
+  
+  Your response must be structured into three distinct fields: 'today', 'tomorrow', and 'next7Days'. Do not leave any field blank.
 
   Crop: {{{cropName}}}
   Location: {{{location}}}
@@ -66,3 +63,4 @@ const weatherSuggestionFlow = ai.defineFlow(
     return output!;
   }
 );
+

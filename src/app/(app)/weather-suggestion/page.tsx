@@ -17,7 +17,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
-import { AlertCircle, Info, Loader2, CloudSun, MapPin, Sparkles, CalendarDays, Wind, Droplets, Thermometer } from 'lucide-react';
+import { AlertCircle, Info, Loader2, CloudSun, MapPin, Sparkles, CalendarDays, Wind, Droplets, Thermometer, Forward } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/hooks/use-language';
 import { type WeatherSuggestionOutput } from '@/ai/flows/weather-suggestion';
@@ -58,9 +58,9 @@ function ResultCard({
             <Skeleton className="h-6 w-1/2" />
             </CardHeader>
             <CardContent className="space-y-4">
-                <Skeleton className="h-24 w-full" />
-                <Skeleton className="h-24 w-full" />
-                <Skeleton className="h-24 w-full" />
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-20 w-full" />
             </CardContent>
         </Card>
         );
@@ -81,31 +81,42 @@ function ResultCard({
     return (
         <Card>
             <CardHeader>
-                <CardTitle>{language === 'kn' ? '7-ದಿನದ ಬೆಳೆ ಸಲಹೆಗಳು' : '7-Day Crop Suggestions'}</CardTitle>
+                <CardTitle>{language === 'kn' ? 'ಹವಾಮಾನ ಆಧಾರಿತ ಸಲಹೆ' : 'Weather-Based Advice'}</CardTitle>
                 <CardDescription>
-                {language === 'kn' ? 'ನಿಮ್ಮ ಬೆಳೆ ಮತ್ತು ಸ್ಥಳೀಯ ಹವಾಮಾನ ಮುನ್ಸೂಚನೆಯ ಆಧಾರದ ಮೇಲೆ ದೈನಂದಿನ ಶಿಫಾರಸುಗಳು.' : 'Daily recommendations based on your crop and local weather forecast.'}
+                {language === 'kn' ? 'ನಿಮ್ಮ ಬೆಳೆ ಮತ್ತು ಸ್ಥಳೀಯ ಹವಾಮಾನ ಮುನ್ಸೂಚನೆಯ ಆಧಾರದ ಮೇಲೆ ಶಿಫಾರಸುಗಳು.' : 'Recommendations based on your crop and local weather forecast.'}
                 </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-                 {data.suggestions.map((item, index) => (
-                    <Card key={index}>
-                        <CardHeader>
-                            <CardTitle className='text-xl flex justify-between items-center'>
-                                <span>{item.day}</span>
-                                <span className='text-sm font-normal text-muted-foreground'>{item.date}</span>
-                            </CardTitle>
-                            <CardDescription className='flex items-center gap-2 pt-2'>
-                                <CloudSun className='h-4 w-4 text-accent-foreground' /> {item.condition}
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-muted-foreground flex items-start gap-3">
-                                <Sparkles className='h-5 w-5 mt-1 text-primary flex-shrink-0' />
-                                <span>{item.suggestion}</span>
-                            </p>
-                        </CardContent>
-                    </Card>
-                ))}
+            <CardContent className="space-y-6">
+                <Card>
+                    <CardHeader>
+                        <CardTitle className='text-xl flex items-center gap-2'>
+                           <Sparkles className='h-5 w-5 text-primary' /> {language === 'kn' ? 'ಇಂದು' : 'Today'}
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-muted-foreground">{data.today}</p>
+                    </CardContent>
+                </Card>
+                 <Card>
+                    <CardHeader>
+                        <CardTitle className='text-xl flex items-center gap-2'>
+                           <Forward className='h-5 w-5 text-primary' /> {language === 'kn' ? 'ನಾಳೆ' : 'Tomorrow'}
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-muted-foreground">{data.tomorrow}</p>
+                    </CardContent>
+                </Card>
+                 <Card>
+                    <CardHeader>
+                        <CardTitle className='text-xl flex items-center gap-2'>
+                           <CalendarDays className='h-5 w-5 text-primary' /> {language === 'kn' ? 'ಮುಂದಿನ 7 ದಿನಗಳು' : 'Next 7 Days'}
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-muted-foreground">{data.next7Days}</p>
+                    </CardContent>
+                </Card>
             </CardContent>
         </Card>
     );
@@ -155,6 +166,9 @@ export default function WeatherSuggestionPage() {
         title: 'Error',
         description: state.error,
       });
+    }
+    if (state.data) {
+      formRef.current?.reset();
     }
   }, [state, toast]);
 
