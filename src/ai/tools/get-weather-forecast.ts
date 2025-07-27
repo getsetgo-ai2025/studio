@@ -4,7 +4,7 @@
 import { ai } from "@/ai/genkit";
 import { z } from "zod";
 
-const DailyForecastSchema = z.object({
+export const DailyForecastSchema = z.object({
     day: z.string().describe("The day of the week (e.g., 'Monday')."),
     date: z.string().describe("The date in a human-readable format (e.g., 'June 20, 2025')."),
     temp_max_c: z.number().describe("Maximum temperature in Celsius."),

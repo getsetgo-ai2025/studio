@@ -22,6 +22,8 @@ import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/hooks/use-language';
 import { type WeatherSuggestionOutput } from '@/ai/flows/weather-suggestion';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { type DailyForecastSchema } from '@/ai/tools/get-weather-forecast';
+import { type z } from 'zod';
 
 function SubmitButton() {
   const { pending: isPending } = useFormStatus();
@@ -39,6 +41,26 @@ function SubmitButton() {
     </Button>
   );
 }
+
+const ForecastDetails = ({ forecast, lang }: { forecast: z.infer<typeof DailyForecastSchema>, lang: 'en' | 'kn' }) => (
+    <div className='mt-2 space-y-2 text-sm text-muted-foreground'>
+        <div className="font-semibold">{forecast.condition}</div>
+        <div className="flex flex-wrap gap-x-4 gap-y-1">
+            <div className="flex items-center gap-1">
+                <Thermometer className='h-4 w-4' /> {lang === 'kn' ? 'ತಾಪಮಾನ' : 'Temp'}: {forecast.temp_min_c}°C - {forecast.temp_max_c}°C
+            </div>
+             <div className="flex items-center gap-1">
+                <Droplets className='h-4 w-4' /> {lang === 'kn' ? 'ಮಳೆ' : 'Rain'}: {forecast.rainfall_mm}mm
+            </div>
+            <div className="flex items-center gap-1">
+                <Sparkles className='h-4 w-4' /> {lang === 'kn' ? 'ಆರ್ದ್ರತೆ' : 'Humidity'}: {forecast.humidity_percent}%
+            </div>
+            <div className="flex items-center gap-1">
+                <Wind className='h-4 w-4' /> {lang === 'kn' ? 'ಗಾಳಿ' : 'Wind'}: {forecast.wind_kph}kph
+            </div>
+        </div>
+    </div>
+)
 
 function ResultCard({
   data,
@@ -94,7 +116,8 @@ function ResultCard({
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-muted-foreground">{data.today}</p>
+                        <p className="text-foreground">{data.today.suggestion}</p>
+                        <ForecastDetails forecast={data.today.forecast} lang={language} />
                     </CardContent>
                 </Card>
                  <Card>
@@ -104,7 +127,8 @@ function ResultCard({
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-muted-foreground">{data.tomorrow}</p>
+                        <p className="text-foreground">{data.tomorrow.suggestion}</p>
+                        <ForecastDetails forecast={data.tomorrow.forecast} lang={language} />
                     </CardContent>
                 </Card>
                  <Card>
@@ -114,7 +138,14 @@ function ResultCard({
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-muted-foreground">{data.next7Days}</p>
+                        <div className="space-y-2">
+                             <h4 className="font-semibold">{language === 'kn' ? 'ಹವಾಮಾನ ಸಾರಾಂಶ' : 'Weather Summary'}</h4>
+                             <p className="text-muted-foreground">{data.next7Days.forecastSummary}</p>
+                        </div>
+                         <div className="space-y-2 mt-4">
+                             <h4 className="font-semibold">{language === 'kn' ? 'ಸಲಹೆ ಸಾರಾಂಶ' : 'Suggestion Summary'}</h4>
+                            <p className="text-muted-foreground">{data.next7Days.suggestion}</p>
+                        </div>
                     </CardContent>
                 </Card>
             </CardContent>

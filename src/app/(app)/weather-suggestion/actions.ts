@@ -42,20 +42,41 @@ export async function getSuggestions(
 
     if (language === 'kn') {
         const [
-            translatedToday,
-            translatedTomorrow,
-            translatedNext7Days,
+            translatedTodaySuggestion,
+            translatedTomorrowSuggestion,
+            translatedNext7DaysSuggestion,
+            translatedTodayCondition,
+            translatedTomorrowCondition,
+            translatedForecastSummary,
         ] = await Promise.all([
-            translateText({ text: result.today, targetLanguage: 'kn' }),
-            translateText({ text: result.tomorrow, targetLanguage: 'kn' }),
-            translateText({ text: result.next7Days, targetLanguage: 'kn' }),
+            translateText({ text: result.today.suggestion, targetLanguage: 'kn' }),
+            translateText({ text: result.tomorrow.suggestion, targetLanguage: 'kn' }),
+            translateText({ text: result.next7Days.suggestion, targetLanguage: 'kn' }),
+            translateText({ text: result.today.forecast.condition, targetLanguage: 'kn' }),
+            translateText({ text: result.tomorrow.forecast.condition, targetLanguage: 'kn' }),
+            translateText({ text: result.next7Days.forecastSummary, targetLanguage: 'kn' }),
         ]);
 
         return {
             data: { 
-                today: translatedToday.translatedText,
-                tomorrow: translatedTomorrow.translatedText,
-                next7Days: translatedNext7Days.translatedText,
+                today: {
+                    suggestion: translatedTodaySuggestion.translatedText,
+                    forecast: {
+                        ...result.today.forecast,
+                        condition: translatedTodayCondition.translatedText,
+                    }
+                },
+                tomorrow: {
+                    suggestion: translatedTomorrowSuggestion.translatedText,
+                    forecast: {
+                        ...result.tomorrow.forecast,
+                        condition: translatedTomorrowCondition.translatedText,
+                    }
+                },
+                next7Days: {
+                    suggestion: translatedNext7DaysSuggestion.translatedText,
+                    forecastSummary: translatedForecastSummary.translatedText,
+                },
              },
             error: null,
         }
