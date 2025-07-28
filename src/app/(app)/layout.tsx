@@ -163,8 +163,8 @@ function UserMenu() {
         <DropdownMenuTrigger asChild>
           <Button variant="secondary" size="icon" className="rounded-full">
             <Avatar>
-              <AvatarImage src={user.photoURL || "https://placehold.co/40x40.png"} alt={user.displayName || 'User Avatar'} data-ai-hint="farmer avatar" />
-              <AvatarFallback>{user.email?.[0].toUpperCase() || 'U'}</AvatarFallback>
+              <AvatarImage src={user.photoURL || undefined} alt={user.displayName || 'User Avatar'} />
+              <AvatarFallback>{(user.displayName?.[0] || user.email?.[0] || 'U').toUpperCase()}</AvatarFallback>
             </Avatar>
             <span className="sr-only">Toggle user menu</span>
           </Button>
