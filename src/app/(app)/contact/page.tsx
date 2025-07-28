@@ -78,42 +78,44 @@ export default function ContactUsPage() {
                         {language === 'kn' ? 'ಸಹಾಯಕ್ಕಾಗಿ ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ ಅಥವಾ ನಿಮ್ಮ ಪ್ರತಿಕ್ರಿಯೆಯನ್ನು ಸಲ್ಲಿಸಿ.' : 'Contact us for help or submit your feedback.'}
                     </CardDescription>
                 </CardHeader>
-                <CardContent className="grid gap-6 md:grid-cols-2">
-                    <div className="space-y-4">
-                        <Button asChild className="w-full">
-                            <a href="tel:+919999999999">
-                                <Phone className="mr-2" /> {language === 'kn' ? 'ಸಹಾಯವಾಣಿಗೆ ಕರೆ ಮಾಡಿ' : 'Call Helpline'}
-                            </a>
-                        </Button>
-                        <Button asChild variant="secondary" className="w-full bg-green-500 hover:bg-green-600 text-white">
-                            <a href="https://wa.me/919300429961" target="_blank" rel="noopener noreferrer">
-                                <WhatsAppIcon className="mr-2 h-5 w-5" /> {language === 'kn' ? 'ವಾಟ್ಸಾಪ್‌ನಲ್ಲಿ ಚಾಟ್ ಮಾಡಿ' : 'Chat on WhatsApp'}
-                            </a>
-                        </Button>
+                <CardContent>
+                    <div className="grid gap-8 md:grid-cols-2">
+                        <div className="space-y-4">
+                            <Button asChild className="w-full">
+                                <a href="tel:+919999999999">
+                                    <Phone className="mr-2" /> {language === 'kn' ? 'ಸಹಾಯವಾಣಿಗೆ ಕರೆ ಮಾಡಿ' : 'Call Helpline'}
+                                </a>
+                            </Button>
+                            <Button asChild variant="secondary" className="w-full bg-green-500 hover:bg-green-600 text-white">
+                                <a href="https://wa.me/919300429961" target="_blank" rel="noopener noreferrer">
+                                    <WhatsAppIcon className="mr-2 h-5 w-5" /> {language === 'kn' ? 'ವಾಟ್ಸಾಪ್‌ನಲ್ಲಿ ಚಾಟ್ ಮಾಡಿ' : 'Chat on WhatsApp'}
+                                </a>
+                            </Button>
+                        </div>
+                        <form ref={formRef} action={formAction} className="space-y-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="name">{language === 'kn' ? 'ಹೆಸರು' : 'Name'}</Label>
+                                <Input id="name" name="name" defaultValue={user?.displayName || ''} required />
+                                {state.formErrors?.name && <p className="text-sm text-destructive">{state.formErrors.name[0]}</p>}
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="phone">{language === 'kn' ? 'ದೂರವಾಣಿ ಸಂಖ್ಯೆ' : 'Phone Number'}</Label>
+                                <Input id="phone" name="phone" type="tel" defaultValue={user?.phoneNumber || ''} required />
+                                {state.formErrors?.phone && <p className="text-sm text-destructive">{state.formErrors.phone[0]}</p>}
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="message">{language === 'kn' ? 'ಸಮಸ್ಯೆ/ಸಂದೇಶ' : 'Issue/Message'}</Label>
+                                <Textarea id="message" name="message" rows={4} required />
+                                {state.formErrors?.message && <p className="text-sm text-destructive">{state.formErrors.message[0]}</p>}
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="attachment">{language === 'kn' ? 'ಲಗತ್ತು (ಐಚ್ಛಿಕ)' : 'Attachment (Optional)'}</Label>
+                                <Input id="attachment" name="attachment" type="file" ref={fileInputRef} accept="image/*,audio/*" />
+                                <p className="text-xs text-muted-foreground">{language === 'kn' ? 'ಚಿತ್ರ ಅಥವಾ ಆಡಿಯೋ ಫೈಲ್ ಅನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ.' : 'Upload an image or audio file.'}</p>
+                            </div>
+                            <SubmitButton />
+                        </form>
                     </div>
-                    <form ref={formRef} action={formAction} className="space-y-4">
-                         <div className="space-y-2">
-                            <Label htmlFor="name">{language === 'kn' ? 'ಹೆಸರು' : 'Name'}</Label>
-                            <Input id="name" name="name" defaultValue={user?.displayName || ''} required />
-                            {state.formErrors?.name && <p className="text-sm text-destructive">{state.formErrors.name[0]}</p>}
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="phone">{language === 'kn' ? 'ದೂರವಾಣಿ ಸಂಖ್ಯೆ' : 'Phone Number'}</Label>
-                            <Input id="phone" name="phone" type="tel" defaultValue={user?.phoneNumber || ''} required />
-                            {state.formErrors?.phone && <p className="text-sm text-destructive">{state.formErrors.phone[0]}</p>}
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="message">{language === 'kn' ? 'ಸಮಸ್ಯೆ/ಸಂದೇಶ' : 'Issue/Message'}</Label>
-                            <Textarea id="message" name="message" rows={4} required />
-                            {state.formErrors?.message && <p className="text-sm text-destructive">{state.formErrors.message[0]}</p>}
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="attachment">{language === 'kn' ? 'ಲಗತ್ತು (ಐಚ್ಛಿಕ)' : 'Attachment (Optional)'}</Label>
-                            <Input id="attachment" name="attachment" type="file" ref={fileInputRef} accept="image/*,audio/*" />
-                            <p className="text-xs text-muted-foreground">{language === 'kn' ? 'ಚಿತ್ರ ಅಥವಾ ಆಡಿಯೋ ಫೈಲ್ ಅನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ.' : 'Upload an image or audio file.'}</p>
-                        </div>
-                        <SubmitButton />
-                    </form>
                 </CardContent>
             </Card>
         </div>
