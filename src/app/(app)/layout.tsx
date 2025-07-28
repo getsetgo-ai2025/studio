@@ -99,7 +99,7 @@ const secondaryNavItems = [
         href: "/about",
         icon: Info,
         label: { en: "About Us", kn: "ನಮ್ಮ ಬಗ್ಗೆ" },
-        tooltip: { en: "About Raitha Sahayak", kn: "ರೈತ ಸಹಾಯಕ್ ಬಗ್ಗೆ" },
+        tooltip: { en: "About Raitha Sahayak", kn: "ರೈತ ಸಹಾಯಕ ಬಗ್ಗೆ" },
     },
 ];
 

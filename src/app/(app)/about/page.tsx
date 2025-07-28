@@ -13,7 +13,7 @@ export default function AboutPage() {
             <Card>
                 <CardHeader>
                     <CardTitle className="font-headline flex items-center gap-2">
-                        <Info /> About Raita Sahayak (ರೈತ ಸಹಾಯಕ)
+                        <Info /> About Raitha Sahayak (ರೈತ ಸಹಾಯಕ)
                     </CardTitle>
                     <CardDescription>
                         Empowering farmers with AI-powered assistance.
@@ -23,7 +23,7 @@ export default function AboutPage() {
                     <div className="space-y-2">
                         <h2 className="font-semibold text-lg text-primary">Our Mission</h2>
                         <p>
-                            Raita Sahayak aims to bridge the technology gap for farmers by providing an intuitive, accessible, and powerful tool right at their fingertips. We leverage cutting-edge generative AI to offer instant advice on crop health, provide up-to-date market analysis, and help navigate complex government schemes. Our goal is to empower every farmer to make informed decisions, increase productivity, and improve their livelihood.
+                            Raitha Sahayak aims to bridge the technology gap for farmers by providing an intuitive, accessible, and powerful tool right at their fingertips. We leverage cutting-edge generative AI to offer instant advice on crop health, provide up-to-date market analysis, and help navigate complex government schemes. Our goal is to empower every farmer to make informed decisions, increase productivity, and improve their livelihood.
                         </p>
                     </div>
 

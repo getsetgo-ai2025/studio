@@ -5,7 +5,7 @@ import { AuthProvider } from '@/hooks/use-auth';
 import { LanguageProvider } from '@/hooks/use-language';
 
 export const metadata: Metadata = {
-  title: 'Raita Sahayak',
+  title: 'Raitha Sahayak',
   description: 'Your AI-powered agricultural assistant.',
 };
 

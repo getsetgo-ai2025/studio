@@ -99,7 +99,7 @@ export default function HomePage() {
                         <p className="text-muted-foreground">
                             {language === 'kn' ? 
                                 'ರೈತ ಸಹಾಯಕವು ಭಾರತದ ರೈತರಿಗೆ, ವಿಶೇಷವಾಗಿ ಕರ್ನಾಟಕದ ನಮ್ಮ ಸಹೋದರ ಸಹೋದರಿಯರಿಗೆ ಸಹಾಯ ಮಾಡಲು ವಿನ್ಯಾಸಗೊಳಿಸಲಾದ ಒಂದು ಕ್ರಾಂತಿಕಾರಿ ಅಪ್ಲಿಕೇಶನ್ ಆಗಿದೆ. ನಮ್ಮ ಗುರಿ ಆಧುನಿಕ ತಂತ್ರಜ್ಞಾನವನ್ನು ನಿಮ್ಮ ಬೆರಳ ತುದಿಗೆ ತರುವುದು, ತಜ್ಞರ ಸಲಹೆ, ಮಾರುಕಟ್ಟೆ ಒಳನೋಟಗಳು ಮತ್ತು ಸರ್ಕಾರಿ ಯೋಜನೆಗಳ ಮಾಹಿತಿಯನ್ನು ತಕ್ಷಣ ಒದಗಿಸುವುದು.' :
-                                'Raita Sahayak is a revolutionary app designed to assist the hardworking farmers of India, with a special focus on our brothers and sisters in Karnataka. Our mission is to bring modern technology to your fingertips, providing expert advice, market insights, and information on government schemes instantly.'
+                                'Raitha Sahayak is a revolutionary app designed to assist the hardworking farmers of India, with a special focus on our brothers and sisters in Karnataka. Our mission is to bring modern technology to your fingertips, providing expert advice, market insights, and information on government schemes instantly.'
                             }
                         </p>
                     </div>
