@@ -53,7 +53,7 @@ import {
 } from "lucide-react";
 import { useLanguage } from "@/hooks/use-language";
 import { useAuth } from "@/hooks/use-auth";
-
+import mainlogo from "@/app/images/raitasahayak.jpg";
 
 const navItems = [
   {
@@ -219,7 +219,7 @@ function AppSidebar() {
       <SidebarHeader>
         <div className="flex items-center gap-2 p-2">
             <Image
-                src="/images/raitasahayak.jpg"
+                src={mainlogo}
                 alt="Raitha Sahayak Logo"
                 width={32}
                 height={32}
