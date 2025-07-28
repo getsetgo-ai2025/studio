@@ -217,7 +217,7 @@ function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader>
-        <div className="flex items-center gap-2 p-2">
+        <Link href="/home" className="flex items-center gap-2 p-2">
             <Image
                 src={mainlogo}
                 alt="Raitha Sahayak Logo"
@@ -226,7 +226,7 @@ function AppSidebar() {
                 className="rounded-full"
             />
           <h1 className="text-xl font-headline font-bold">{language === 'kn' ? 'ರೈತ ಸಹಾಯಕ' : 'Raitha Sahayak'}</h1>
-        </div>
+        </Link>
       </SidebarHeader>
       <SidebarContent>
         <SidebarMenu>
