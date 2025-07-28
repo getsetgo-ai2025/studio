@@ -214,10 +214,18 @@ function AppHeader() {
 function AppSidebar() {
   const pathname = usePathname();
   const { language } = useLanguage();
+  const { isMobile, setOpenMobile } = useSidebar();
+
+  const handleLinkClick = () => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  };
+
   return (
     <Sidebar>
       <SidebarHeader>
-        <Link href="/home" className="flex items-center gap-2 p-2">
+        <Link href="/home" className="flex items-center gap-2 p-2" onClick={handleLinkClick}>
             <Image
                 src={mainlogo}
                 alt="Raitha Sahayak Logo"
@@ -237,7 +245,7 @@ function AppSidebar() {
                 isActive={pathname === item.href}
                 tooltip={{ children: item.tooltip[language], side: "right", align: "center" }}
               >
-                <Link href={item.href}>
+                <Link href={item.href} onClick={handleLinkClick}>
                   <item.icon />
                   <span>{item.label[language]}</span>
                 </Link>
@@ -256,7 +264,7 @@ function AppSidebar() {
                 isActive={pathname === item.href}
                 tooltip={{ children: item.tooltip[language], side: "right", align: "center" }}
               >
-                <Link href={item.href}>
+                <Link href={item.href} onClick={handleLinkClick}>
                   <item.icon />
                   <span>{item.label[language]}</span>
                 </Link>
@@ -270,9 +278,15 @@ function AppSidebar() {
 }
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-    const { loading } = useAuth();
+    const { user, loading } = useAuth();
     const router = useRouter();
     const pathname = usePathname();
+
+    React.useEffect(() => {
+        if (!loading && !user && !['/login', '/register', '/home', '/about', '/contact'].includes(pathname)) {
+            router.push('/home');
+        }
+    }, [loading, user, pathname, router]);
 
     if (loading) {
         return (
@@ -282,7 +296,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         )
     }
 
-    if (!loading && !['/login', '/register'].includes(pathname)) {
+    if (!user && !['/login', '/register'].includes(pathname)) {
         return (
         <SidebarProvider>
           <AppSidebar />
@@ -297,7 +311,32 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </SidebarProvider>
         )
     }
+
+    if (user && (pathname === '/login' || pathname === '/register')) {
+        router.push('/home');
+         return (
+            <div className="flex min-h-screen w-full items-center justify-center bg-background">
+                <Loader2 className="h-10 w-10 animate-spin text-primary" />
+            </div>
+        )
+    }
     
-    // For login and register pages
+    // For authenticated users or login/register pages
+    if(user) {
+        return (
+        <SidebarProvider>
+          <AppSidebar />
+          <SidebarInset>
+            <div className="flex flex-col">
+              <AppHeader />
+              <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 bg-background">
+                {children}
+              </main>
+            </div>
+          </SidebarInset>
+        </SidebarProvider>
+        )
+    }
+
     return <>{children}</>;
 }
