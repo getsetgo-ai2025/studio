@@ -86,6 +86,12 @@ const navItems = [
     label: { en: "Weather Suggestion", kn: "ಹವಾಮಾನ ಸಲಹೆ" },
     tooltip: { en: "Get weather-based crop suggestions", kn: "ಹವಾಮಾನ ಆಧಾರಿತ ಬೆಳೆ ಸಲಹೆಗಳನ್ನು ಪಡೆಯಿರಿ" },
   },
+  {
+    href: "/contact",
+    icon: LifeBuoy,
+    label: { en: "Contact Us", kn: "ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ" },
+    tooltip: { en: "Contact and Support", kn: "ಸಂಪರ್ಕ ಮತ್ತು ಬೆಂಬಲ" },
+  },
 ];
 
 const secondaryNavItems = [
@@ -229,12 +235,6 @@ function AppHeader() {
             <Link href="/about">
                 <Info className="mr-2 h-5 w-5" />
                 <span>{language === 'kn' ? 'ನಮ್ಮ ಬಗ್ಗೆ' : 'About Us'}</span>
-            </Link>
-        </Button>
-       <Button variant="ghost" asChild>
-            <Link href="/contact">
-                <LifeBuoy className="mr-2 h-5 w-5" />
-                <span>{language === 'kn' ? 'ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ' : 'Contact Us'}</span>
             </Link>
         </Button>
       <LanguageSwitcher />
