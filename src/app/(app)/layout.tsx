@@ -3,6 +3,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import {
   Avatar,
@@ -185,29 +186,6 @@ function UserMenu() {
     );
 }
 
-const Logo = (props: React.SVGProps<SVGSVGElement>) => (
-    <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-        <path d="M50 10C27.909 10 10 27.909 10 50s17.909 40 40 40 40-17.909 40-40S72.091 10 50 10z" fill="url(#paint0_linear)"/>
-        <path d="M42.5 72.5V57.5L25 65V50l17.5-7.5V35L25 42.5V27.5l17.5-7.5V12.5l-25 10v65l25-10z" fill="url(#paint1_linear)"/>
-        <path d="M57.5 72.5V57.5L75 65V50l-17.5-7.5V35L75 42.5V27.5L57.5 20V12.5l25 10v65l-25-10z" fill="url(#paint2_linear)"/>
-        <defs>
-            <linearGradient id="paint0_linear" x1="50" y1="10" x2="50" y2="90" gradientUnits="userSpaceOnUse">
-                <stop stopColor="#228B22"/>
-                <stop offset="1" stopColor="#8FBC8F"/>
-            </linearGradient>
-            <linearGradient id="paint1_linear" x1="42.5" y1="12.5" x2="42.5" y2="87.5" gradientUnits="userSpaceOnUse">
-                <stop stopColor="#FFFFFF"/>
-                <stop offset="1" stopColor="#D3D3D3"/>
-            </linearGradient>
-            <linearGradient id="paint2_linear" x1="57.5" y1="12.5" x2="57.5" y2="87.5" gradientUnits="userSpaceOnUse">
-                <stop stopColor="#FFFFFF"/>
-                <stop offset="1" stopColor="#D3D3D3"/>
-            </linearGradient>
-        </defs>
-    </svg>
-);
-
-
 function AppHeader() {
   const { isMobile } = useSidebar();
   const { language } = useLanguage();
@@ -240,7 +218,13 @@ function AppSidebar() {
     <Sidebar>
       <SidebarHeader>
         <div className="flex items-center gap-2 p-2">
-          <Logo className="h-8 w-8 text-primary" />
+            <Image
+                src="/images/raitasahayak.jpg"
+                alt="Raitha Sahayak Logo"
+                width={32}
+                height={32}
+                className="rounded-md"
+            />
           <h1 className="text-xl font-headline font-bold">{language === 'kn' ? 'ರೈತ ಸಹಾಯಕ' : 'Raitha Sahayak'}</h1>
         </div>
       </SidebarHeader>
