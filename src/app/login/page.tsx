@@ -70,6 +70,10 @@ export default function LoginPage() {
     }
   };
 
+  const handleGuestLogin = () => {
+    router.push('/home');
+  }
+
   if (authLoading || user) {
     return (
         <div className="flex min-h-screen w-full items-center justify-center bg-background">
@@ -125,6 +129,9 @@ export default function LoginPage() {
               ) : (
                 "Login"
               )}
+            </Button>
+            <Button variant="outline" className="w-full" onClick={handleGuestLogin} type="button">
+                Continue as Guest
             </Button>
             {error && (
                <Alert variant="destructive">
