@@ -17,7 +17,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
-import { AlertCircle, Info, Loader2, CloudSun, MapPin, Sparkles, CalendarDays, Wind, Droplets, Thermometer, Forward } from 'lucide-react';
+import { AlertCircle, Info, Loader2, CloudSun, MapPin, Sparkles, CalendarDays, Wind, Droplets, Thermometer, Forward, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/hooks/use-language';
 import { type WeatherSuggestionOutput } from '@/ai/flows/weather-suggestion';
@@ -199,7 +199,7 @@ export default function WeatherSuggestionPage() {
       });
     }
     if (state.data) {
-      formRef.current?.reset();
+        // Don't reset form on success
     }
   }, [state, toast]);
 
@@ -232,6 +232,13 @@ export default function WeatherSuggestionPage() {
             formAction(formData);
         }}>
           <CardContent className="space-y-6">
+            <Alert variant="destructive">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle>{language === 'kn' ? 'ಡೆಮೊ ಡೇಟಾ' : 'Demo Data'}</AlertTitle>
+                <AlertDescription>
+                    {language === 'kn' ? 'ದಯವಿಟ್ಟು ಗಮನಿಸಿ: ಹವಾಮಾನ ಮುನ್ಸೂಚನೆಯು ಪ್ರದರ್ಶನ ಉದ್ದೇಶಗಳಿಗಾಗಿ ಮಾತ್ರ ಮತ್ತು ನೈಜ-ಪ್ರಪಂಚದ ಡೇಟಾವನ್ನು ಪ್ರತಿನಿಧಿಸುವುದಿಲ್ಲ.' : 'Please note: The weather forecast is for demonstration purposes only and does not represent real-world data.'}
+                </AlertDescription>
+            </Alert>
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label htmlFor="cropName">{language === 'kn' ? 'ಬೆಳೆ ಹೆಸರು' : 'Crop Name'}</Label>

@@ -1,8 +1,9 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Info, ExternalLink } from "lucide-react";
+import { Info, ExternalLink, AlertTriangle } from "lucide-react";
 import packageJson from '../../../../package.json';
 import Link from "next/link";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function AboutPage() {
     const appVersion = packageJson.version;
@@ -25,6 +26,15 @@ export default function AboutPage() {
                             Raita Sahayak aims to bridge the technology gap for farmers by providing an intuitive, accessible, and powerful tool right at their fingertips. We leverage cutting-edge generative AI to offer instant advice on crop health, provide up-to-date market analysis, and help navigate complex government schemes. Our goal is to empower every farmer to make informed decisions, increase productivity, and improve their livelihood.
                         </p>
                     </div>
+
+                    <Alert variant="destructive">
+                        <AlertTriangle className="h-4 w-4" />
+                        <AlertTitle>Demonstration Mode</AlertTitle>
+                        <AlertDescription>
+                            Please be aware that this application currently uses placeholder (mock) data for features like Weather Suggestions, Nearby Store locations, and Alternative Buyer information. To connect to real-time data, you would need to integrate third-party APIs (e.g., a weather service, Google Places API) which may require API keys and have associated costs. The AI-driven analysis is real, but its data sources are simulated.
+                        </AlertDescription>
+                    </Alert>
+
                      <div className="space-y-2">
                         <h2 className="font-semibold text-lg text-primary">App Version</h2>
                         <p>

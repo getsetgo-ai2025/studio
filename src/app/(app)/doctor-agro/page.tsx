@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useRef, useState, useActionState } from "react";
@@ -18,7 +19,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Camera, AlertCircle, Loader2, Mic, Volume2, MicOff, CheckCircle2, HeartPulse, List, Store, Stethoscope, Info } from "lucide-react";
+import { Camera, AlertCircle, Loader2, Mic, Volume2, MicOff, CheckCircle2, HeartPulse, List, Store, Stethoscope, Info, AlertTriangle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/hooks/use-language";
 import { useSpeechRecognition } from "@/hooks/use-speech-recognition";
@@ -225,9 +226,7 @@ export default function DoctorAgroPage() {
       });
     }
     if (state.data) {
-        formRef.current?.reset();
-        setImagePreview(null);
-        setDescription('');
+        // Do not reset form to allow viewing results
     }
   }, [state, toast]);
 
@@ -258,6 +257,13 @@ export default function DoctorAgroPage() {
             formAction(formData);
         }}>
           <CardContent className="space-y-4">
+            <Alert variant="destructive">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle>{language === 'kn' ? 'ಡೆಮೊ ಡೇಟಾ' : 'Demo Data'}</AlertTitle>
+                <AlertDescription>
+                    {language === 'kn' ? 'ದಯವಿಟ್ಟು ಗಮನಿಸಿ: ಹತ್ತಿರದ ಮಳಿಗೆಗಳ ಪಟ್ಟಿಯು ಪ್ರದರ್ಶನ ಉದ್ದೇಶಗಳಿಗಾಗಿ ಮಾತ್ರ ಮತ್ತು ನೈಜ-ಪ್ರಪಂಚದ ಡೇಟಾವನ್ನು ಪ್ರತಿನಿಧಿಸುವುದಿಲ್ಲ.' : 'Please note: The list of nearby outlets is for demonstration purposes only and does not represent real-world data.'}
+                </AlertDescription>
+            </Alert>
             <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="location">{language === 'kn' ? 'ಸ್ಥಳ' : 'Location'}</Label>
