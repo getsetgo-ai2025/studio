@@ -211,13 +211,6 @@ export default function DamagedCropRecoveryPage() {
             formAction(formData);
         }}>
           <CardContent className="space-y-6">
-            <Alert variant="destructive">
-                <AlertTriangle className="h-4 w-4" />
-                <AlertTitle>{language === 'kn' ? 'ಡೆಮೊ ಡೇಟಾ' : 'Demo Data'}</AlertTitle>
-                <AlertDescription>
-                    {language === 'kn' ? 'ದಯವಿಟ್ಟು ಗಮನಿಸಿ: ಪರ್ಯಾಯ ಖರೀದಿದಾರರ ಪಟ್ಟಿಯು ಪ್ರದರ್ಶನ ಉದ್ದೇಶಗಳಿಗಾಗಿ ಮಾತ್ರ ಮತ್ತು ನೈಜ-ಪ್ರಪಂಚದ ಡೇಟಾವನ್ನು ಪ್ರತಿನಿಧಿಸುವುದಿಲ್ಲ.' : 'Please note: The list of alternative buyers is for demonstration purposes only and does not represent real-world data.'}
-                </AlertDescription>
-            </Alert>
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label htmlFor="cropName">{language === 'kn' ? 'ಬೆಳೆ ಹೆಸರು' : 'Crop Name'}</Label>
