@@ -186,17 +186,49 @@ function UserMenu() {
     );
 }
 
+function Brand() {
+    const { language } = useLanguage();
+     const { isMobile, setOpenMobile } = useSidebar();
+
+    const handleLinkClick = () => {
+        if (isMobile) {
+            setOpenMobile(false);
+        }
+    };
+    return (
+        <Link href="/home" className="flex items-center gap-2 p-2" onClick={handleLinkClick}>
+            <Image
+                src={mainlogo}
+                alt="Raitha Sahayak Logo"
+                width={32}
+                height={32}
+                className="rounded-full"
+            />
+          <h1 className="text-xl font-headline font-bold">{language === 'kn' ? 'ರೈತ ಸಹಾಯಕ' : 'Raitha Sahayak'}</h1>
+        </Link>
+    )
+}
+
 function AppHeader() {
   const { isMobile } = useSidebar();
   const { language } = useLanguage();
   return (
     <header className="flex h-14 items-center gap-4 border-b bg-card px-4 lg:h-[60px] lg:px-6">
       <SidebarTrigger className="md:hidden" />
+      <div className="hidden md:block">
+        <Brand />
+      </div>
       <div className="w-full flex-1" />
        <Button variant="ghost" asChild>
             <Link href="/home">
                 <Home className="mr-2 h-5 w-5" />
                 <span>{language === 'kn' ? 'ಮುಖಪುಟ' : 'Home'}</span>
+            </Link>
+        </Button>
+       <Button variant="ghost" asChild>
+            <Link href="/about">
+                <Info className="mr-2 h-5 w-5" />
+                <span>{language === 'kn' ? 'ನಮ್ಮ ಬಗ್ಗೆ' : 'About Us'}</span>
             </Link>
         </Button>
        <Button variant="ghost" asChild>
@@ -225,16 +257,7 @@ function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader>
-        <Link href="/home" className="flex items-center gap-2 p-2" onClick={handleLinkClick}>
-            <Image
-                src={mainlogo}
-                alt="Raitha Sahayak Logo"
-                width={32}
-                height={32}
-                className="rounded-full"
-            />
-          <h1 className="text-xl font-headline font-bold">{language === 'kn' ? 'ರೈತ ಸಹಾಯಕ' : 'Raitha Sahayak'}</h1>
-        </Link>
+        <Brand />
       </SidebarHeader>
       <SidebarContent>
         <SidebarMenu>
@@ -289,6 +312,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         }
     }, [loading, user, pathname, router]);
 
+    // This effect handles redirection for unauthenticated users
+     React.useEffect(() => {
+        if (!loading && !user && !['/login', '/register', '/home', '/about', '/contact', '/doctor-agro', '/market-analysis', '/govt-schemes', '/damaged-crop-recovery', '/weather-suggestion'].includes(pathname)) {
+            router.push('/home');
+        }
+    }, [loading, user, pathname, router]);
+
     if (loading) {
         return (
             <div className="flex min-h-screen w-full items-center justify-center bg-background">
@@ -297,6 +327,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         )
     }
 
+    // Unauthenticated users can access login and register pages
     if (!user && (pathname === '/login' || pathname === '/register')) {
         return <>{children}</>;
     }
