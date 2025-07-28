@@ -223,7 +223,7 @@ function AppSidebar() {
                 alt="Raitha Sahayak Logo"
                 width={32}
                 height={32}
-                className="rounded-md"
+                className="rounded-full"
             />
           <h1 className="text-xl font-headline font-bold">{language === 'kn' ? 'ರೈತ ಸಹಾಯಕ' : 'Raitha Sahayak'}</h1>
         </div>
