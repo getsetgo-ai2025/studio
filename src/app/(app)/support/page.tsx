@@ -86,7 +86,7 @@ export default function SupportPage() {
                             </a>
                         </Button>
                         <Button asChild variant="secondary" className="w-full bg-green-500 hover:bg-green-600 text-white">
-                            <a href="https://wa.me/919999999999" target="_blank" rel="noopener noreferrer">
+                            <a href="https://wa.me/919300429961" target="_blank" rel="noopener noreferrer">
                                 <WhatsAppIcon className="mr-2 h-5 w-5" /> {language === 'kn' ? 'ವಾಟ್ಸಾಪ್‌ನಲ್ಲಿ ಚಾಟ್ ಮಾಡಿ' : 'Chat on WhatsApp'}
                             </a>
                         </Button>
