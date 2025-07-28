@@ -87,10 +87,10 @@ const navItems = [
     tooltip: { en: "Get weather-based crop suggestions", kn: "ಹವಾಮಾನ ಆಧಾರಿತ ಬೆಳೆ ಸಲಹೆಗಳನ್ನು ಪಡೆಯಿರಿ" },
   },
   {
-    href: "/contact",
+    href: "/personal-assistance",
     icon: LifeBuoy,
-    label: { en: "Contact Us", kn: "ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ" },
-    tooltip: { en: "Contact and Support", kn: "ಸಂಪರ್ಕ ಮತ್ತು ಬೆಂಬಲ" },
+    label: { en: "Personal Assistance", kn: "ವೈಯಕ್ತಿಕ ಸಹಾಯ" },
+    tooltip: { en: "Get personal assistance", kn: "ವೈಯಕ್ತಿಕ ಸಹಾಯ ಪಡೆಯಿರಿ" },
   },
 ];
 
@@ -314,7 +314,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
     // This effect handles redirection for unauthenticated users
      React.useEffect(() => {
-        if (!loading && !user && !['/login', '/register', '/home', '/about', '/contact', '/doctor-agro', '/market-analysis', '/govt-schemes', '/damaged-crop-recovery', '/weather-suggestion'].includes(pathname)) {
+        if (!loading && !user && !['/login', '/register', '/home', '/about', '/personal-assistance', '/doctor-agro', '/market-analysis', '/govt-schemes', '/damaged-crop-recovery', '/weather-suggestion'].includes(pathname)) {
             router.push('/home');
         }
     }, [loading, user, pathname, router]);
