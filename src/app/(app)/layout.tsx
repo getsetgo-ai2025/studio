@@ -116,7 +116,7 @@ function LanguageSwitcher() {
                 </DropdownMenuRadioGroup>
             </DropdownMenuContent>
         </DropdownMenu>
-    )
+    );
 }
 
 function UserMenu() {
@@ -283,7 +283,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
 
     React.useEffect(() => {
-        if (!loading && !user && !['/login', '/register', '/home', '/about', '/contact'].includes(pathname)) {
+        // This effect handles redirection for authenticated users away from login/register
+        if (!loading && user && (pathname === '/login' || pathname === '/register')) {
             router.push('/home');
         }
     }, [loading, user, pathname, router]);
@@ -296,47 +297,22 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         )
     }
 
-    if (!user && !['/login', '/register'].includes(pathname)) {
-        return (
-        <SidebarProvider>
-          <AppSidebar />
-          <SidebarInset>
-            <div className="flex flex-col">
-              <AppHeader />
-              <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 bg-background">
-                {children}
-              </main>
-            </div>
-          </SidebarInset>
-        </SidebarProvider>
-        )
-    }
-
-    if (user && (pathname === '/login' || pathname === '/register')) {
-        router.push('/home');
-         return (
-            <div className="flex min-h-screen w-full items-center justify-center bg-background">
-                <Loader2 className="h-10 w-10 animate-spin text-primary" />
-            </div>
-        )
+    if (!user && (pathname === '/login' || pathname === '/register')) {
+        return <>{children}</>;
     }
     
-    // For authenticated users or login/register pages
-    if(user) {
-        return (
+    // All other pages are wrapped in the main layout
+    return (
         <SidebarProvider>
-          <AppSidebar />
-          <SidebarInset>
-            <div className="flex flex-col">
-              <AppHeader />
-              <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 bg-background">
-                {children}
-              </main>
-            </div>
-          </SidebarInset>
+            <AppSidebar />
+            <SidebarInset>
+                <div className="flex flex-col">
+                    <AppHeader />
+                    <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 bg-background">
+                        {children}
+                    </main>
+                </div>
+            </SidebarInset>
         </SidebarProvider>
-        )
-    }
-
-    return <>{children}</>;
+    );
 }
