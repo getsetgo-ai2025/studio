@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, type FormEvent, useEffect } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -15,6 +16,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { FirebaseError } from "firebase/app";
 import { useAuth } from "@/hooks/use-auth";
+import mainlogo from "@/app/images/raitasahayak.jpg";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState('');
@@ -64,6 +66,12 @@ export default function RegisterPage() {
             case 'auth/operation-not-allowed':
                 errorMessage = "Email/Password sign-in is not enabled in the Firebase console.";
                 break;
+            case 'auth/api-key-not-valid':
+                errorMessage = "The API key is invalid. Please check your configuration.";
+                break;
+            case 'auth/configuration-not-found':
+                errorMessage = "Email/Password sign-in method is not enabled in the Firebase console.";
+                break;
             default:
                 errorMessage = `Failed to register: ${error.message}`;
         }
@@ -91,7 +99,17 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-background p-4">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
+        <div className="flex flex-col items-center gap-4 mb-8">
+             <Image
+                src={mainlogo}
+                alt="Raitha Sahayak Logo"
+                width={80}
+                height={80}
+                className="rounded-full"
+            />
+            <h1 className="text-3xl font-headline font-bold text-primary">Raitha Sahayak</h1>
+        </div>
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl">Register</CardTitle>
